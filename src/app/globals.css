@@ -1,21 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    @apply text-white bg-dark;
+  }
+  
+  body {
+    @apply min-h-screen antialiased;
   }
 }
 
+@layer components {
+  .nav-link {
+    @apply px-3 py-2 text-sm text-gray-300 hover:text-white transition-colors duration-200;
+  }
+  
+  .button-primary {
+    @apply px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg transition-colors duration-200;
+  }
+  
+  .button-secondary {
+    @apply px-4 py-2 bg-dark-100 hover:bg-dark-200 text-white rounded-lg transition-colors duration-200;
+  }
+  
+  .input-primary {
+    @apply px-4 py-2 bg-dark-50 border border-dark-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-dark-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-dark-400;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-blue-500 animate-gradient;
+}
+
+/* Gradient hover effect */
+.hover-gradient-effect {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hover-gradient-effect::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(16, 185, 129, 0.15),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hover-gradient-effect:hover::before {
+  opacity: 1;
+}
+
+/* Gradient hover effect */
+.hover-gradient-effect {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hover-gradient-effect::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 0) var(--mouse-y, 0),
+    rgba(16, 185, 129, 0.15),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hover-gradient-effect:hover::before {
+  opacity: 1;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better text rendering */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

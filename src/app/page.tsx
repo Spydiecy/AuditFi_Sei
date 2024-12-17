@@ -1,100 +1,513 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { 
+  Shield, 
+  ChartLine, 
+  Bug, 
+  LockKey, 
+  ArrowRight, 
+  Warning,
+  Check,
+  Star,
+  Code,
+  Gear,
+  Lightning,
+  TwitterLogo,
+  GithubLogo,
+  DiscordLogo,
+  TelegramLogo,
+  FileSearch,
+  Robot,
+  Cube
+} from 'phosphor-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { CHAIN_CONFIG } from '@/utils/web3';
+
+interface Audit {
+  contractHash: string;
+  stars: number;
+  summary: string;
+  auditor: string;
+  timestamp: number;
+  chain: string;
+}
+
+const features = [
+  {
+    icon: Shield,
+    title: 'AI-Powered Analysis',
+    description: 'Advanced smart contract analysis powered by Google Gemini AI'
+  },
+  {
+    icon: Lightning,
+    title: 'Multi-Chain Support',
+    description: 'Audit smart contracts across multiple blockchain networks'
+  },
+  {
+    icon: Code,
+    title: 'On-Chain Verification',
+    description: 'All audit reports are stored permanently on the blockchain'
+  }
+];
+
+const recentAudits: Audit[] = [
+  { 
+    contractHash: '0x123...abc',
+    stars: 5,
+    summary: 'No critical vulnerabilities found. Code follows best practices.',
+    auditor: '0xABc...123',
+    timestamp: 1703116800,
+    chain: 'lineaSepolia'
+  },
+  { 
+    contractHash: '0x456...def',
+    stars: 4,
+    summary: 'Minor optimizations suggested. Overall secure implementation.',
+    auditor: '0xDEf...456',
+    timestamp: 1703030400,
+    chain: 'neoX'
+  },
+  { 
+    contractHash: '0x789...ghi',
+    stars: 5,
+    summary: 'Excellent implementation with robust security measures.',
+    auditor: '0xGHi...789',
+    timestamp: 1702944000,
+    chain: 'lineaSepolia'
+  }
+];
+
+const steps = [
+  {
+    icon: FileSearch,
+    title: 'Submit Contract',
+    description: 'Paste your Solidity smart contract code into our platform'
+  },
+  {
+    icon: Robot,
+    title: 'AI Analysis',
+    description: 'Our AI powered by Google Gemini analyzes your code for vulnerabilities'
+  },
+  {
+    icon: Cube,
+    title: 'On-Chain Report',
+    description: 'Audit report is permanently stored on the blockchain'
+  },
+  {
+    icon: Shield,
+    title: 'Verification',
+    description: 'Get your smart contract verified and secure'
+  }
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: 'ease-out-cubic'
+    });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    // Gradient hover effect
+    const handleMouseMove = (e: MouseEvent) => {
+      const elements = document.getElementsByClassName('hover-gradient-effect');
+      Array.from(elements).forEach((element) => {
+        const htmlElement = element as HTMLElement;
+        const rect = htmlElement.getBoundingClientRect();
+        htmlElement.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        htmlElement.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center">
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-[#0A0B0D] to-blue-900/10" />
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        
+        <div className="relative max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-mono font-bold mb-6">
+                NEXT-GEN<br /> SMART CONTRACT<br />
+                <span className="text-emerald-400">SECURITY</span>
+              </h1>
+              <p className="text-gray-400 text-lg mb-8 max-w-xl">
+                Secure your smart contracts with AI-powered analysis and on-chain verification. Get instant security audits powered by Google Gemini AI.
+              </p>
+              <div className="flex gap-4">
+                <Link href="/audit">
+                  <button className="hover-gradient-effect px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-200 flex items-center gap-2">
+                    Start Audit <ArrowRight weight="bold" />
+                  </button>
+                </Link>
+                <Link href="/reports">
+                  <button className="hover-gradient-effect px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-all duration-200">
+                    View Reports
+                  </button>
+                </Link>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="hidden lg:block relative"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-lg" />
+              <Image
+                src="/screenshot.png"
+                alt="AuditFi Interface"
+                width={600}
+                height={400}
+                className="rounded-lg shadow-2xl border border-gray-800"
+              />
+            </motion.div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-gray-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl font-bold font-mono mb-4">
+              How It Works
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Secure your smart contracts in four simple steps
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-4 gap-8">
+            {steps.map((step, index) => (
+              <div
+                key={index}
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+                className="relative hover-gradient-effect bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
+              >
+                <div className="absolute -top-4 -left-4 w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center font-bold text-black">
+                  {index + 1}
+                </div>
+                <step.icon size={32} className="text-emerald-400 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-gray-400">{step.description}</p>
+                {index < 3 && (
+                  <ArrowRight 
+                    className="absolute -right-4 top-1/2 transform -translate-y-1/2 text-emerald-400"
+                    size={24}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl font-bold font-mono mb-4">
+              Powered by Advanced Technology
+            </h2>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Combining AI analysis with blockchain verification for comprehensive smart contract security
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={index}
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+                className="hover-gradient-effect bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
+              >
+                <feature.icon size={32} className="text-emerald-400 mb-4" />
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-400">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Networks Section */}
+      <section className="py-20 bg-gray-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold font-mono mb-4">Supported Networks</h2>
+            <p className="text-gray-400">Currently supporting multiple testnets with mainnet coming soon</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+            {Object.entries(CHAIN_CONFIG).map(([key, chain], index) => (
+              <motion.div
+                key={key}
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+                className="hover-gradient-effect flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
+              >
+                <Image
+                  src={chain.iconPath}
+                  alt={chain.chainName}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+                <div>
+                  <h3 className="font-semibold">{chain.chainName}</h3>
+                  <p className="text-gray-400 text-sm">{chain.nativeCurrency.symbol}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Audits */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-2xl font-mono">Recent Audits</h2>
+            <Link href="/reports" className="text-emerald-400 hover:text-emerald-300 transition-colors duration-200 flex items-center gap-2">
+              View All <ArrowRight weight="bold" />
+            </Link>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-800 text-gray-400 text-sm">
+                  <th className="py-4 text-left font-mono font-normal">CONTRACT</th>
+                  <th className="py-4 text-left font-mono font-normal">CHAIN</th>
+                  <th className="py-4 text-left font-mono font-normal">RATING</th>
+                  <th className="py-4 text-left font-mono font-normal">SUMMARY</th>
+                  <th className="py-4 text-left font-mono font-normal">AUDITOR</th>
+                  <th className="py-4 text-left font-mono font-normal">DATE</th>
+                  <th className="py-4 w-4"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentAudits.map((audit, index) => (
+                  <tr 
+                    key={index}
+                    className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors duration-200"
+                  >
+                    <td className="py-6 font-mono text-white">
+                      {audit.contractHash}
+                    </td>
+                    <td className="py-6">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={CHAIN_CONFIG[audit.chain as keyof typeof CHAIN_CONFIG].iconPath}
+                          alt={CHAIN_CONFIG[audit.chain as keyof typeof CHAIN_CONFIG].chainName}
+                          width={16}
+                          height={16}
+                          className="rounded-full"
+                        />
+                        <span className="text-gray-200">
+                          {CHAIN_CONFIG[audit.chain as keyof typeof CHAIN_CONFIG].chainName}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-6">
+                      <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            weight={i < audit.stars ? "fill" : "regular"}
+                            className={i < audit.stars ? "text-emerald-400" : "text-gray-800"}
+                            size={16}
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-6 text-gray-400 max-w-md">
+                      <div className="truncate">
+                        {audit.summary}
+                      </div>
+                    </td>
+                    <td className="py-6 font-mono text-gray-200">
+                      {audit.auditor}
+                    </td>
+                    <td className="py-6 text-gray-400">
+                      {new Date(audit.timestamp * 1000).toLocaleDateString()}
+                    </td>
+                    <td className="py-6">
+                      <Link href={`/reports/${audit.contractHash}`}>
+                        <ArrowRight className="w-4 h-4 text-emerald-400 hover:text-emerald-300 transition-colors duration-200" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gray-900/30">
+        <div className="max-w-7=7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative rounded-2xl overflow-hidden hover-gradient-effect">
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10" />
+            <div className="relative p-12 text-center">
+              <h2 className="text-4xl font-bold font-mono mb-6">
+                Ready to Secure Your Smart Contracts?
+              </h2>
+              <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
+                Get started with our AI-powered audit platform and ensure your protocol's security
+              </p>
+              <Link href="/audit">
+                <button className="hover-gradient-effect px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-200 flex items-center gap-2 mx-auto">
+                  Start Free Audit <ArrowRight weight="bold" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900/30 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Logo & Description */}
+            <div className="col-span-2">
+              <div className="flex items-center space-x-2 mb-4">
+                <Image 
+                  src="/logo.svg"
+                  alt="AuditFi Logo"
+                  width={32}
+                  height={32}
+                />
+                <span className="text-xl font-mono font-bold">
+                  AuditFi
+                </span>
+              </div>
+              <p className="text-gray-400 mb-4">
+                Next-generation smart contract security powered by AI. 
+                Get instant audits and on-chain verification for your Web3 projects.
+              </p>
+              <div className="flex space-x-4">
+                <a 
+                  href="https://twitter.com/auditfi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
+                  <TwitterLogo size={24} />
+                </a>
+                <a 
+                  href="https://github.com/auditfi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
+                  <GithubLogo size={24} />
+                </a>
+                <a 
+                  href="https://discord.gg/auditfi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
+                  <DiscordLogo size={24} />
+                </a>
+                <a 
+                  href="https://t.me/auditfi" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-emerald-400 transition-colors"
+                >
+                  <TelegramLogo size={24} />
+                </a>
+              </div>
+            </div>
+
+            {/* Quick Links */}
+            <div>
+              <h3 className="font-semibold mb-4">Quick Links</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link href="/audit" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Start Audit
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/reports" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Reports
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/search" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Search
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h3 className="font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href="https://docs.auditfi.com" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="/faq" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                    FAQ
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+            <p>&copy; {new Date().getFullYear()} AuditFi. All rights reserved.</p>
+          </div>
+        </div>
       </footer>
     </div>
   );
