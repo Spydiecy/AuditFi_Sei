@@ -16,7 +16,8 @@ import { CHAIN_CONFIG } from '@/utils/web3';
 import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contracts';
 
 interface AuditReport {
-  contractHash: string;
+  contractHash: string; 
+  transactionHash: string;  
   stars: number;
   summary: string;
   auditor: string;
@@ -48,34 +49,50 @@ export default function ReportsPage() {
     setIsLoading(true);
     try {
       const allAudits: AuditReport[] = [];
-
+  
       await Promise.all(Object.entries(CHAIN_CONFIG).map(async ([chainKey, chainData]) => {
-        const provider = new ethers.JsonRpcProvider(chainData.rpcUrls[0]);
-        const contract = new ethers.Contract(
-          CONTRACT_ADDRESSES[chainKey as keyof typeof CONTRACT_ADDRESSES],
-          AUDIT_REGISTRY_ABI,
-          provider
-        );
-
-        // Get recent audits (you'll need to implement pagination)
-        const filter = contract.filters.AuditRegistered();
-        const events = await contract.queryFilter(filter, -10000); // Last 10000 blocks
-
-        const chainAudits = await Promise.all(events.map(async (event) => {
-          const audit = await contract.getLatestAudit((event as ethers.EventLog).args.contractHash);
-          return {
-            contractHash: (event as ethers.EventLog).args.contractHash,
-            stars: audit.stars,
-            summary: audit.summary,
-            auditor: audit.auditor,
-            timestamp: Number(audit.timestamp),
-            chain: chainKey as keyof typeof CHAIN_CONFIG
-          };
-        }));
-
-        allAudits.push(...chainAudits);
+        try {
+          const provider = new ethers.JsonRpcProvider(chainData.rpcUrls[0]);
+          const contract = new ethers.Contract(
+            CONTRACT_ADDRESSES[chainKey as keyof typeof CONTRACT_ADDRESSES],
+            AUDIT_REGISTRY_ABI,
+            provider
+          );
+  
+          const currentBlock = await provider.getBlockNumber();
+          const fromBlock = Math.max(0, currentBlock - 10000);
+  
+          // Get events directly
+          const events = await provider.getLogs({
+            address: contract.getAddress(),
+            topics: [ethers.id("AuditRegistered(bytes32,uint8,string,address,uint256)")],
+            fromBlock: fromBlock,
+            toBlock: 'latest'
+          });
+  
+          const decodedEvents = await Promise.all(events.map(async (event) => {
+            const decoded = contract.interface.parseLog({
+              topics: event.topics as string[],
+              data: event.data
+            });
+            
+            return {
+              contractHash: decoded?.args[0],
+              transactionHash: event.transactionHash, // Include the transaction hash
+              stars: Number(decoded?.args[1]),
+              summary: decoded?.args[2],
+              auditor: decoded?.args[3],
+              timestamp: Number(decoded?.args[4]),
+              chain: chainKey as keyof typeof CHAIN_CONFIG
+            };
+          }));
+  
+          allAudits.push(...decodedEvents);
+        } catch (chainError) {
+          console.error(`Error fetching from ${chainKey}:`, chainError);
+        }
       }));
-
+  
       setReports(allAudits.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
       console.error('Failed to fetch audits:', error);
@@ -121,22 +138,41 @@ export default function ReportsPage() {
   };
 
   const exportReport = (report: AuditReport) => {
-    const data = {
-      ...report,
+    // Convert BigInt values and format data for export
+    const formattedReport = {
+      contractHash: report.contractHash,
+      stars: Number(report.stars),
+      summary: report.summary,
+      auditor: report.auditor,
+      timestamp: Number(report.timestamp),
+      chain: report.chain,
       chainName: CHAIN_CONFIG[report.chain].chainName,
       exportDate: new Date().toISOString(),
-      blockExplorer: `${CHAIN_CONFIG[report.chain].blockExplorerUrls[0]}/address/${CONTRACT_ADDRESSES[report.chain]}`
+      // Add additional metadata
+      network: {
+        name: CHAIN_CONFIG[report.chain].chainName,
+        chainId: CHAIN_CONFIG[report.chain].chainId,
+        contractAddress: CONTRACT_ADDRESSES[report.chain],
+      },
+      auditDate: new Date(Number(report.timestamp) * 1000).toLocaleString(),
     };
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `audit-${report.contractHash.slice(0, 8)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+  
+    // Create and download the file
+    try {
+      const blob = new Blob([JSON.stringify(formattedReport, null, 2)], { 
+        type: 'application/json' 
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `audit-${report.contractHash.slice(0, 8)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error exporting report:', error);
+    }
   };
 
   return (
@@ -407,7 +443,7 @@ export default function ReportsPage() {
                       Export Report
                     </button>
                     <a
-                      href={`${CHAIN_CONFIG[selectedReport.chain].blockExplorerUrls[0]}/tx/${selectedReport.contractHash}`}
+                      href={`${CHAIN_CONFIG[selectedReport.chain].blockExplorerUrls[0]}/tx/${selectedReport.transactionHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2"

@@ -1,17 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { ethers } from 'ethers';
 import { 
   Star,
-  ChartBar,
   ArrowSquareOut,
-  Download,
   CircleNotch,
-  LinkBreak,
   Wallet,
-  ShieldCheck
 } from 'phosphor-react';
 import Image from 'next/image';
 import { connectWallet } from '@/utils/web3';

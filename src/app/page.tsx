@@ -5,16 +5,10 @@ import { motion } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { 
-  Shield, 
-  ChartLine, 
-  Bug, 
-  LockKey, 
-  ArrowRight, 
-  Warning,
-  Check,
+  Shield,
+  ArrowRight,
   Star,
   Code,
-  Gear,
   Lightning,
   TwitterLogo,
   GithubLogo,
@@ -390,7 +384,7 @@ export default function Home() {
                 Ready to Secure Your Smart Contracts?
               </h2>
               <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-                Get started with our AI-powered audit platform and ensure your protocol's security
+                Get started with our AI-powered audit platform and ensure your protocol&apos;s security
               </p>
               <Link href="/audit">
                 <button className="hover-gradient-effect px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-200 flex items-center gap-2 mx-auto">

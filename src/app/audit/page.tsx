@@ -5,8 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ethers } from 'ethers';
 import { 
-  Star, 
-  ArrowRight, 
+  Star,
   Warning,
   CheckCircle,
   FileCode,
