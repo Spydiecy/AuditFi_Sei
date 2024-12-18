@@ -5,18 +5,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { connectWallet, switchNetwork, CHAIN_CONFIG } from '@/utils/web3';
+import { connectWallet, switchNetwork, CHAIN_CONFIG, ChainKey } from '@/utils/web3';
 import { SignOut, List, X, CaretDown, CaretUp } from 'phosphor-react';
 import Logo from '/public/logo.svg';
 
-export default function RootLayout({
-  children,
-}: {
+interface RootLayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [address, setAddress] = useState<string | null>(null);
-  const [currentChain, setCurrentChain] = useState('lineaSepolia');
+  const [currentChain, setCurrentChain] = useState<ChainKey>('lineaSepolia');
   const [isChainMenuOpen, setIsChainMenuOpen] = useState(false);
   const [isNetworkSwitching, setIsNetworkSwitching] = useState(false);
   
@@ -25,16 +25,23 @@ export default function RootLayout({
     const checkNetwork = async () => {
       if (window.ethereum) {
         try {
-          const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+          const chainId = await window.ethereum.request({ 
+            method: 'eth_chainId' 
+          }) as string;
+          
           const network = Object.entries(CHAIN_CONFIG).find(
             ([, config]) => config.chainId.toLowerCase() === chainId.toLowerCase()
           );
+          
           if (network) {
-            setCurrentChain(network[0]);
+            setCurrentChain(network[0] as ChainKey);
           }
           
           // Check if already connected
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          const accounts = await window.ethereum.request({ 
+            method: 'eth_accounts' 
+          }) as string[];
+          
           if (accounts && accounts[0]) {
             setAddress(accounts[0]);
           }
@@ -48,35 +55,39 @@ export default function RootLayout({
 
     // Listen for account changes
     if (window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts: string[]) => {
+      const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length === 0) {
           setAddress(null);
         } else {
           setAddress(accounts[0]);
         }
-      });
+      };
+
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      return () => {
+        window.ethereum?.removeListener('accountsChanged', handleAccountsChanged);
+      };
     }
   }, []);
 
   // Listen for network changes
   useEffect(() => {
     if (window.ethereum) {
-      window.ethereum.on('chainChanged', (chainId: string) => {
+      const handleChainChanged = (chainId: string) => {
         const network = Object.entries(CHAIN_CONFIG).find(
           ([, config]) => config.chainId.toLowerCase() === chainId.toLowerCase()
         );
         if (network) {
-          setCurrentChain(network[0]);
+          setCurrentChain(network[0] as ChainKey);
         }
         setIsNetworkSwitching(false);
-      });
+      };
+
+      window.ethereum.on('chainChanged', handleChainChanged);
+      return () => {
+        window.ethereum?.removeListener('chainChanged', handleChainChanged);
+      };
     }
-    return () => {
-      if (window.ethereum && window.ethereum.removeListener) {
-        window.ethereum.removeListener('chainChanged', () => {});
-        window.ethereum.removeListener('accountsChanged', () => {});
-      }
-    };
   }, []);
 
   // Close dropdown when clicking outside
@@ -94,8 +105,8 @@ export default function RootLayout({
 
   const handleConnect = async () => {
     try {
-      const { address } = await connectWallet();
-      setAddress(address);
+      const { address: walletAddress } = await connectWallet();
+      setAddress(walletAddress);
     } catch (error) {
       console.error('Failed to connect wallet:', error);
     }
@@ -105,7 +116,7 @@ export default function RootLayout({
     setAddress(null);
   };
 
-  const handleChainSwitch = async (chainKey: keyof typeof CHAIN_CONFIG) => {
+  const handleChainSwitch = async (chainKey: ChainKey) => {
     if (isNetworkSwitching) return;
     try {
       setIsNetworkSwitching(true);
@@ -143,7 +154,7 @@ export default function RootLayout({
               </Link>
 
               {/* Desktop Navigation */}
-                <div className="hidden md:flex items-center space-x-6">
+              <div className="hidden md:flex items-center space-x-6">
                 {/* Nav Links */}
                 <Link 
                   href="/audit" 
@@ -176,14 +187,14 @@ export default function RootLayout({
                     disabled={isNetworkSwitching}
                   >
                     <Image 
-                      src={CHAIN_CONFIG[currentChain as keyof typeof CHAIN_CONFIG].iconPath}
-                      alt={CHAIN_CONFIG[currentChain as keyof typeof CHAIN_CONFIG].chainName}
+                      src={CHAIN_CONFIG[currentChain].iconPath}
+                      alt={CHAIN_CONFIG[currentChain].chainName}
                       width={20}
                       height={20}
                       className="rounded-full"
                     />
                     <span className="text-sm font-medium">
-                      {isNetworkSwitching ? 'Switching...' : CHAIN_CONFIG[currentChain as keyof typeof CHAIN_CONFIG].chainName}
+                      {isNetworkSwitching ? 'Switching...' : CHAIN_CONFIG[currentChain].chainName}
                     </span>
                     {isChainMenuOpen ? (
                       <CaretUp className="w-4 h-4" />
@@ -198,7 +209,7 @@ export default function RootLayout({
                       {Object.entries(CHAIN_CONFIG).map(([key, chain]) => (
                         <button
                           key={key}
-                          onClick={() => handleChainSwitch(key as keyof typeof CHAIN_CONFIG)}
+                          onClick={() => handleChainSwitch(key as ChainKey)}
                           className={`flex items-center space-x-2 w-full px-4 py-2 text-sm ${
                             currentChain === key 
                               ? 'bg-gray-700 text-white' 
@@ -287,7 +298,7 @@ export default function RootLayout({
                     {Object.entries(CHAIN_CONFIG).map(([key, chain]) => (
                       <button
                         key={key}
-                        onClick={() => handleChainSwitch(key as keyof typeof CHAIN_CONFIG)}
+                        onClick={() => handleChainSwitch(key as ChainKey)}
                         className={`flex items-center space-x-2 w-full px-3 py-2 rounded-lg ${
                           currentChain === key 
                             ? 'bg-gray-800 text-white' 

@@ -48,6 +48,21 @@ interface TransactionState {
   error: string | null;
 }
 
+interface RawVulnerabilities {
+  critical?: unknown[];
+  high?: unknown[];
+  medium?: unknown[];
+  low?: unknown[];
+}
+
+interface RawAuditResponse {
+  stars?: unknown;
+  summary?: unknown;
+  vulnerabilities?: RawVulnerabilities;
+  recommendations?: unknown[];
+  gasOptimizations?: unknown[];
+}
+
 // Constants
 const COOLDOWN_TIME = 30;
 const SEVERITY_CONFIGS: Record<string, SeverityConfig> = {
@@ -58,8 +73,8 @@ const SEVERITY_CONFIGS: Record<string, SeverityConfig> = {
 };
 
 // Response sanitizer
-const sanitizeResponse = (response: any): AuditResult => {
-  const ensureStringArray = (arr: any[] | undefined): string[] => {
+const sanitizeResponse = (response: RawAuditResponse): AuditResult => {
+  const ensureStringArray = (arr: unknown[] | undefined): string[] => {
     if (!Array.isArray(arr)) return [];
     return arr.map(item => String(item)).filter(item => item.length > 0);
   };
@@ -173,12 +188,12 @@ const isSolidityCode = (code: string): boolean => {
         error: null
       });
       setIsReviewBlurred(false);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Failed to register audit:', error);
       setTxState({
         isProcessing: false,
         hash: null,
-        error: error.message || 'Failed to register audit'
+        error: (error instanceof Error) ? error.message : 'Failed to register audit'
       });
     }
   };
@@ -263,7 +278,7 @@ const isSolidityCode = (code: string): boolean => {
       let parsedResponse;
       try {
         parsedResponse = JSON.parse(responseText);
-      } catch (parseError) {
+      } catch {
         const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || 
                          responseText.match(/```\s*([\s\S]*?)\s*```/) ||
                          responseText.match(/({[\s\S]*})/);
@@ -331,7 +346,7 @@ const isSolidityCode = (code: string): boolean => {
               style={{
                 '--mouse-x': `${mousePosition.x}px`,
                 '--mouse-y': `${mousePosition.y}px`
-              } as any}
+              } as React.CSSProperties}
             >
               <div className="absolute inset-0">
                 <div className="p-4 border-b border-gray-800 flex items-center gap-2">
@@ -401,7 +416,7 @@ const isSolidityCode = (code: string): boolean => {
                 style={{
                   '--mouse-x': `${mousePosition.x}px`,
                   '--mouse-y': `${mousePosition.y}px`
-                } as any}
+                } as React.CSSProperties}
               >
                 <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                   <span className="font-mono">Analysis Results</span>

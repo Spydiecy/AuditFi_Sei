@@ -152,7 +152,7 @@ export default function ReportsPage() {
       network: {
         name: CHAIN_CONFIG[report.chain].chainName,
         chainId: CHAIN_CONFIG[report.chain].chainId,
-        contractAddress: CONTRACT_ADDRESSES[report.chain],
+        contractAddress: CONTRACT_ADDRESSES[report.chain as keyof typeof CONTRACT_ADDRESSES],
       },
       auditDate: new Date(Number(report.timestamp) * 1000).toLocaleString(),
     };
