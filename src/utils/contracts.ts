@@ -8,5 +8,6 @@ export const CONTRACT_ADDRESSES = {
     "function registerAudit(bytes32 contractHash, uint8 stars, string calldata summary) external",
     "function getContractAudits(bytes32 contractHash) external view returns (tuple(uint8 stars, string summary, address auditor, uint256 timestamp)[])",
     "function getAuditorHistory(address auditor) external view returns (bytes32[])",
-    "function getLatestAudit(bytes32 contractHash) external view returns (tuple(uint8 stars, string summary, address auditor, uint256 timestamp))"
+    "function getLatestAudit(bytes32 contractHash) external view returns (tuple(uint8 stars, string summary, address auditor, uint256 timestamp))",
+    "event AuditRegistered(bytes32 indexed contractHash, uint8 stars, string summary, address indexed auditor, uint256 timestamp)"
   ] as const;

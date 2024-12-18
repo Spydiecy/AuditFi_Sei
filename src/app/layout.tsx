@@ -152,16 +152,16 @@ export default function RootLayout({
                   Audit
                 </Link>
                 <Link 
-                  href="/search" 
-                  className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
-                >
-                  Search
-                </Link>
-                <Link 
                   href="/reports" 
                   className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
                 >
                   Reports
+                </Link>
+                <Link 
+                  href="/profile" 
+                  className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
+                >
+                  Profile
                 </Link>
 
                 {/* Chain Switcher */}

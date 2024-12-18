@@ -18,7 +18,7 @@ import {
   ArrowSquareOut
 } from 'phosphor-react';
 import { connectWallet } from '@/utils/web3';
-import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contrac';
+import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contracts';
 import { CHAIN_CONFIG } from '@/utils/web3';
 
 // Initialize Google Generative AI
