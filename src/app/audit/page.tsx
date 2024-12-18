@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ethers } from 'ethers';
 import { 
   Star, 
   ArrowRight, 
@@ -13,37 +14,17 @@ import {
   Cube,
   Lock,
   Timer,
-  CircleNotch 
+  CircleNotch,
+  ArrowSquareOut
 } from 'phosphor-react';
+import { connectWallet } from '@/utils/web3';
+import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contrac';
+import { CHAIN_CONFIG } from '@/utils/web3';
 
 // Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
-const sanitizeResponse = (response: any): AuditResult => {
-    // Ensure all arrays exist and contain only strings
-    const ensureStringArray = (arr: any[] | undefined): string[] => {
-      if (!Array.isArray(arr)) return [];
-      return arr.map(item => String(item)).filter(item => item.length > 0);
-    };
-  
-    // Ensure vulnerabilities object exists with all required properties
-    const vulnerabilities = {
-      critical: ensureStringArray(response?.vulnerabilities?.critical),
-      high: ensureStringArray(response?.vulnerabilities?.high),
-      medium: ensureStringArray(response?.vulnerabilities?.medium),
-      low: ensureStringArray(response?.vulnerabilities?.low)
-    };
-  
-    // Construct sanitized response
-    return {
-      stars: Math.min(Math.max(Number(response?.stars) || 0, 0), 5),
-      summary: String(response?.summary || 'Analysis completed.'),
-      vulnerabilities,
-      recommendations: ensureStringArray(response?.recommendations),
-      gasOptimizations: ensureStringArray(response?.gasOptimizations)
-    };
-  };
-
+// Interfaces
 interface AuditResult {
   stars: number;
   summary: string;
@@ -62,6 +43,13 @@ interface SeverityConfig {
   label: string;
 }
 
+interface TransactionState {
+  isProcessing: boolean;
+  hash: string | null;
+  error: string | null;
+}
+
+// Constants
 const COOLDOWN_TIME = 30;
 const SEVERITY_CONFIGS: Record<string, SeverityConfig> = {
   critical: { color: 'text-red-500', label: 'Critical' },
@@ -70,7 +58,31 @@ const SEVERITY_CONFIGS: Record<string, SeverityConfig> = {
   low: { color: 'text-blue-500', label: 'Low Risk' }
 };
 
+// Response sanitizer
+const sanitizeResponse = (response: any): AuditResult => {
+  const ensureStringArray = (arr: any[] | undefined): string[] => {
+    if (!Array.isArray(arr)) return [];
+    return arr.map(item => String(item)).filter(item => item.length > 0);
+  };
+
+  const vulnerabilities = {
+    critical: ensureStringArray(response?.vulnerabilities?.critical),
+    high: ensureStringArray(response?.vulnerabilities?.high),
+    medium: ensureStringArray(response?.vulnerabilities?.medium),
+    low: ensureStringArray(response?.vulnerabilities?.low)
+  };
+
+  return {
+    stars: Math.min(Math.max(Number(response?.stars) || 0, 0), 5),
+    summary: String(response?.summary || 'Analysis completed.'),
+    vulnerabilities,
+    recommendations: ensureStringArray(response?.recommendations),
+    gasOptimizations: ensureStringArray(response?.gasOptimizations)
+  };
+};
+
 export default function AuditPage() {
+  // State management
   const [code, setCode] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AuditResult | null>(null);
@@ -78,7 +90,15 @@ export default function AuditPage() {
   const [cooldown, setCooldown] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [error, setError] = useState<string | null>(null);
+  const [isReviewBlurred, setIsReviewBlurred] = useState(true);
+  const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG>('lineaSepolia');
+  const [txState, setTxState] = useState<TransactionState>({
+    isProcessing: false,
+    hash: null,
+    error: null
+  });
 
+  // Mouse tracking effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -87,6 +107,7 @@ export default function AuditPage() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  // Cooldown timer effect
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (cooldown > 0) {
@@ -97,15 +118,73 @@ export default function AuditPage() {
     return () => clearInterval(interval);
   }, [cooldown]);
 
-  // Add these validation functions
+// Validation functions
 const isSolidityCode = (code: string): boolean => {
-    // Check for basic Solidity indicators
     const hasPragma = /pragma\s+solidity\s+[\^]?\d+\.\d+\.\d+/.test(code);
     const hasContract = /contract\s+\w+/.test(code);
-    
     return hasPragma && hasContract;
   };
-  
+
+  // Chain registration function
+  const registerAuditOnChain = async () => {
+    if (!result || !code) return;
+
+  setTxState({ isProcessing: true, hash: null, error: null });
+
+  try {
+    const { provider, signer } = await connectWallet();
+    
+    // Calculate contract hash
+    const contractHash = ethers.keccak256(
+      ethers.toUtf8Bytes(code)
+    );
+
+    // Get current chain ID
+    const network = await provider.getNetwork();
+    const chainId = '0x' + network.chainId.toString(16);
+    
+    // Determine contract address and update current chain
+    let contractAddress = '';
+    if (chainId.toLowerCase() === CHAIN_CONFIG.lineaSepolia.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.lineaSepolia;
+      setCurrentChain('lineaSepolia');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.neoX.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.neoX;
+      setCurrentChain('neoX');
+    } else {
+      throw new Error('Please switch to Linea Sepolia or Neo X TestNet');
+    }
+
+      const contract = new ethers.Contract(
+        contractAddress,
+        AUDIT_REGISTRY_ABI,
+        signer
+      );
+
+      const tx = await contract.registerAudit(
+        contractHash,
+        result.stars,
+        result.summary
+      );
+
+      const receipt = await tx.wait();
+      setTxState({
+        isProcessing: false,
+        hash: receipt.transactionHash,
+        error: null
+      });
+      setIsReviewBlurred(false);
+    } catch (error: any) {
+      console.error('Failed to register audit:', error);
+      setTxState({
+        isProcessing: false,
+        hash: null,
+        error: error.message || 'Failed to register audit'
+      });
+    }
+  };
+
+  // Main analysis function
   const analyzeContract = async () => {
     if (!code.trim()) {
       setError('Please enter your smart contract code.');
@@ -119,24 +198,60 @@ const isSolidityCode = (code: string): boolean => {
 
     setError(null);
     setIsAnalyzing(true);
+    setIsReviewBlurred(true);
 
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
       
-      const prompt = `You are a professional smart contract security auditor. Analyze the provided Solidity smart contract for security vulnerabilities.
+      const prompt = `You are a professional smart contract security auditor. Your task is to analyze the provided Solidity smart contract with zero tolerance for security issues.
 
-      Return your analysis in this JSON format:
+      Rating System (Extremely Strict):
+      - 5 stars: ONLY if the contract has absolutely zero vulnerabilities of any kind, implements all security best practices, has optimal gas usage, and uses the latest Solidity features securely.
+      
+      - 4 stars: ONLY if the contract has no critical or high vulnerabilities, maximum of 1-2 medium issues that are not easily exploitable, and follows most security best practices.
+      
+      - 3 stars: If there are no critical vulnerabilities but has high severity issues that need immediate attention, or multiple medium severity issues.
+      
+      - 2 stars: If there is even one critical vulnerability or multiple high severity issues that make the contract unsafe for production.
+      
+      - 1 star: Multiple critical and high severity vulnerabilities that make the contract extremely unsafe.
+      
+      - 0 stars: Fundamental security flaws that make the contract completely unsafe and exploitable.
+
+      Critical Issues (Any one of these automatically reduces rating to 2 or lower):
+      - Reentrancy vulnerabilities
+      - Unchecked external calls
+      - Integer overflow/underflow risks
+      - Access control flaws
+      - Unprotected selfdestruct
+      - Timestamp manipulation risks
+      - Missing input validation
+      - Unprotected critical functions
+
+      High Severity Issues (Any one of these prevents 5-star rating):
+      - Missing event emissions
+      - Unoptimized gas usage
+      - Inadequate error handling
+      - State variable shadowing
+      - Complex fallback functions
+      - Implicit visibility levels
+
+      Provide your response in this exact JSON format:
       {
-        "stars": (number 0-5),
-        "summary": "Brief overall assessment",
+        "stars": number (default to lowest rating if in doubt),
+        "summary": "Detailed explanation of the rating and major concerns",
         "vulnerabilities": {
-          "critical": ["Detailed explanation of critical issue"],
-          "high": ["Detailed explanation of high severity issue"],
-          "medium": ["Detailed explanation of medium severity issue"],
-          "low": ["Detailed explanation of low severity issue"]
+          "critical": ["Detailed explanation of each critical vulnerability"],
+          "high": ["Detailed explanation of each high severity issue"],
+          "medium": ["Detailed explanation of each medium severity issue"],
+          "low": ["Detailed explanation of each low severity issue"]
         },
-        "recommendations": ["Specific recommendation"],
-        "gasOptimizations": ["Specific optimization suggestion"]
+        "recommendations": [
+          "Specific, actionable recommendation with code example"
+        ],
+        "gasOptimizations": [
+          "Specific gas optimization with estimated savings"
+        ]
       }
 
       Contract to analyze:
@@ -145,13 +260,11 @@ const isSolidityCode = (code: string): boolean => {
       const result = await model.generateContent(prompt);
       const responseText = result.response.text();
       
-      // Try to parse the response, handling potential JSON formatting issues
+      // Parse and sanitize response
       let parsedResponse;
       try {
-        // First, try direct parsing
         parsedResponse = JSON.parse(responseText);
       } catch (parseError) {
-        // If direct parsing fails, try to extract JSON from markdown blocks
         const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || 
                          responseText.match(/```\s*([\s\S]*?)\s*```/) ||
                          responseText.match(/({[\s\S]*})/);
@@ -167,8 +280,18 @@ const isSolidityCode = (code: string): boolean => {
         }
       }
 
-      // Sanitize and validate the response
       const sanitizedResponse = sanitizeResponse(parsedResponse);
+
+      // Enforce strict rating based on vulnerabilities
+      if (sanitizedResponse.vulnerabilities.critical.length > 0) {
+        sanitizedResponse.stars = Math.min(sanitizedResponse.stars, 2);
+      }
+      if (sanitizedResponse.vulnerabilities.high.length > 0) {
+        sanitizedResponse.stars = Math.min(sanitizedResponse.stars, 3);
+      }
+      if (sanitizedResponse.vulnerabilities.critical.length > 2) {
+        sanitizedResponse.stars = 0;
+      }
       
       setResult(sanitizedResponse);
       setShowResult(true);
@@ -184,7 +307,7 @@ const isSolidityCode = (code: string): boolean => {
   return (
     <div className="min-h-screen py-12">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
+        {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-mono font-bold mb-4">Smart Contract Audit</h1>
           <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts</p>
@@ -228,6 +351,7 @@ const isSolidityCode = (code: string): boolean => {
                 </div>
               </div>
 
+              {/* Cooldown Overlay */}
               <AnimatePresence>
                 {cooldown > 0 && (
                   <motion.div
@@ -274,16 +398,28 @@ const isSolidityCode = (code: string): boolean => {
           <div className="h-[700px]">
             {result && showResult ? (
               <div 
-                className="h-full bg-gray-900/50 rounded-lg border border-gray-800 hover-gradient-effect"
+                className="h-full bg-gray-900/50 rounded-lg border border-gray-800 hover-gradient-effect relative"
                 style={{
                   '--mouse-x': `${mousePosition.x}px`,
                   '--mouse-y': `${mousePosition.y}px`
                 } as any}
               >
-                <div className="p-4 border-b border-gray-800">
+                <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                   <span className="font-mono">Analysis Results</span>
+                  {txState.hash && (
+                    <a 
+                        href={`${CHAIN_CONFIG[currentChain].blockExplorerUrls[0]}/tx/${txState.hash}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1"
+                    >
+                        View Transaction <ArrowSquareOut size={16} />
+                    </a>
+                    )}
                 </div>
-                <div className="h-[calc(100%-60px)] custom-scrollbar overflow-auto p-6">
+
+                <div className={`h-[calc(100%-60px)] custom-scrollbar overflow-auto p-6 transition-all duration-300 ${isReviewBlurred ? 'blur-md select-none' : ''}`}>
+                  {/* Results Content */}
                   {/* Rating */}
                   <div className="flex items-center gap-4 mb-6">
                     <div className="flex gap-1">
@@ -355,6 +491,36 @@ const isSolidityCode = (code: string): boolean => {
                     </ul>
                   </div>
                 </div>
+
+                {/* Register Audit Button Overlay */}
+                {isReviewBlurred && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <button
+                      onClick={registerAuditOnChain}
+                      disabled={txState.isProcessing}
+                      className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-bold rounded-lg transition-all duration-200 flex items-center gap-2"
+                    >
+                      {txState.isProcessing ? (
+                        <>
+                          <CircleNotch className="animate-spin" size={20} />
+                          Registering Audit...
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={20} />
+                          Register Audit On-Chain
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+                {/* Transaction Error Message */}
+                {txState.error && (
+                  <div className="absolute bottom-4 left-4 right-4 bg-red-500/10 border border-red-500/20 text-red-500 px-4 py-2 rounded-lg">
+                    {txState.error}
+                  </div>
+                )}
               </div>
             ) : (
               <div className="h-full bg-gray-900/50 rounded-lg border border-gray-800 flex items-center justify-center text-gray-400">
