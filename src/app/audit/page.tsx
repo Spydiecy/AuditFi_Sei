@@ -165,8 +165,11 @@ const isSolidityCode = (code: string): boolean => {
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.neoX.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.neoX;
       setCurrentChain('neoX');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.kaiaTestnet.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.kaiaTestnet;
+      setCurrentChain('kaiaTestnet');
     } else {
-      throw new Error('Please switch to Linea Sepolia or Neo X TestNet');
+      throw new Error('Please switch to Linea Sepolia or Neo X TestNet or Kaia Testnet to register audits');
     }
 
       const contract = new ethers.Contract(

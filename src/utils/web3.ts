@@ -59,6 +59,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://neoxt4seed1.ngd.network'],
     blockExplorerUrls: ['https://xt4scan.ngd.network/'],
     iconPath: '/chains/neox.png'
+  },
+  kaiaTestnet: {
+    chainId: '0x3E9', // 1001 in hex
+    chainName: 'Kaia Testnet',
+    nativeCurrency: { 
+      name: 'KAIA', 
+      symbol: 'KAIA', 
+      decimals: 18 
+    },
+    rpcUrls: ['https://kaia-kairos.blockpi.network/v1/rpc/public'],
+    blockExplorerUrls: ['https://kairos.kaiascope.com'],
+    iconPath: '/chains/kaia.png'
   }
 } as const;
 

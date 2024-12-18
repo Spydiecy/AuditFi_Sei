@@ -1,7 +1,8 @@
 // constants/contracts.ts
 export const CONTRACT_ADDRESSES = {
     lineaSepolia: '0x92B1C0072D6DFccb86766b0Bf3cE62b44095FF13',
-    neoX: '0x16f16b1742ECA434faf9442a9f9d933A766acfCA'
+    neoX: '0x16f16b1742ECA434faf9442a9f9d933A766acfCA',
+    kaiaTestnet: '0xC2eEc239F617F15b0D289024fB22183a5185C86e'
   } as const;
   
   export const AUDIT_REGISTRY_ABI = [
