@@ -19,6 +19,31 @@ import {
 // Initialize Google Generative AI
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
+const sanitizeResponse = (response: any): AuditResult => {
+    // Ensure all arrays exist and contain only strings
+    const ensureStringArray = (arr: any[] | undefined): string[] => {
+      if (!Array.isArray(arr)) return [];
+      return arr.map(item => String(item)).filter(item => item.length > 0);
+    };
+  
+    // Ensure vulnerabilities object exists with all required properties
+    const vulnerabilities = {
+      critical: ensureStringArray(response?.vulnerabilities?.critical),
+      high: ensureStringArray(response?.vulnerabilities?.high),
+      medium: ensureStringArray(response?.vulnerabilities?.medium),
+      low: ensureStringArray(response?.vulnerabilities?.low)
+    };
+  
+    // Construct sanitized response
+    return {
+      stars: Math.min(Math.max(Number(response?.stars) || 0, 0), 5),
+      summary: String(response?.summary || 'Analysis completed.'),
+      vulnerabilities,
+      recommendations: ensureStringArray(response?.recommendations),
+      gasOptimizations: ensureStringArray(response?.gasOptimizations)
+    };
+  };
+
 interface AuditResult {
   stars: number;
   summary: string;
@@ -82,88 +107,79 @@ const isSolidityCode = (code: string): boolean => {
   };
   
   const analyzeContract = async () => {
-    // Strict Solidity validation
     if (!code.trim()) {
       setError('Please enter your smart contract code.');
       return;
     }
-  
+
     if (!isSolidityCode(code)) {
       setError('Invalid input. Please ensure your code is a valid Solidity smart contract (must include pragma directive and contract declaration).');
       return;
     }
-  
+
     setError(null);
     setIsAnalyzing(true);
-  
+
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-        
-        const prompt = `You are a professional smart contract security auditor. Analyze the provided Solidity smart contract for security vulnerabilities.
-    
-        Provide your response in this exact JSON format (ensure all entries are plain strings, not objects):
-        {
-          "stars": number (0-5 based on severity),
-          "summary": "Brief overall assessment",
-          "vulnerabilities": {
-            "critical": ["Plain string explaining each critical vulnerability"],
-            "high": ["Plain string explaining each high severity issue"],
-            "medium": ["Plain string explaining each medium severity issue"],
-            "low": ["Plain string explaining each low severity issue"]
-          },
-          "recommendations": [
-            "Plain string recommendation 1",
-            "Plain string recommendation 2"
-          ],
-          "gasOptimizations": [
-            "Plain string optimization suggestion 1",
-            "Plain string optimization suggestion 2"
-          ]
-        }
-    
-        Important:
-        - Each array must contain only string elements, not objects
-        - Keep explanations clear and concise
-        - Include specific details in the string itself
-        - Do not use nested objects or complex structures
-    
-        Contract to analyze:
-        ${code}`;
-    
-        const result = await model.generateContent(prompt);
-        const responseText = result.response.text();
-        
-        const cleanedResponse = responseText.replace(/```json\s?|\s?```/g, '').trim();
-        const response = JSON.parse(cleanedResponse);
-    
-        // Validate that all array elements are strings
-        const validateArrayOfStrings = (arr: any[]): boolean => 
-          Array.isArray(arr) && arr.every(item => typeof item === 'string');
-    
-        // Comprehensive response validation
-        if (!response.stars || 
-            typeof response.stars !== 'number' ||
-            typeof response.summary !== 'string' ||
-            !response.vulnerabilities ||
-            !validateArrayOfStrings(response.vulnerabilities.critical) ||
-            !validateArrayOfStrings(response.vulnerabilities.high) ||
-            !validateArrayOfStrings(response.vulnerabilities.medium) ||
-            !validateArrayOfStrings(response.vulnerabilities.low) ||
-            !validateArrayOfStrings(response.recommendations) ||
-            !validateArrayOfStrings(response.gasOptimizations)) {
-          throw new Error('Invalid response format from AI');
-        }
-    
-        setResult(response);
-        setShowResult(true);
-        setCooldown(COOLDOWN_TIME);
-      } catch (error) {
-        console.error('Analysis failed:', error);
-        setError('Analysis failed. Please try again or contact support if the issue persists.');
-      } finally {
-        setIsAnalyzing(false);
+      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+      
+      const prompt = `You are a professional smart contract security auditor. Analyze the provided Solidity smart contract for security vulnerabilities.
+
+      Return your analysis in this JSON format:
+      {
+        "stars": (number 0-5),
+        "summary": "Brief overall assessment",
+        "vulnerabilities": {
+          "critical": ["Detailed explanation of critical issue"],
+          "high": ["Detailed explanation of high severity issue"],
+          "medium": ["Detailed explanation of medium severity issue"],
+          "low": ["Detailed explanation of low severity issue"]
+        },
+        "recommendations": ["Specific recommendation"],
+        "gasOptimizations": ["Specific optimization suggestion"]
       }
-    };
+
+      Contract to analyze:
+      ${code}`;
+
+      const result = await model.generateContent(prompt);
+      const responseText = result.response.text();
+      
+      // Try to parse the response, handling potential JSON formatting issues
+      let parsedResponse;
+      try {
+        // First, try direct parsing
+        parsedResponse = JSON.parse(responseText);
+      } catch (parseError) {
+        // If direct parsing fails, try to extract JSON from markdown blocks
+        const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || 
+                         responseText.match(/```\s*([\s\S]*?)\s*```/) ||
+                         responseText.match(/({[\s\S]*})/);
+                         
+        if (jsonMatch) {
+          try {
+            parsedResponse = JSON.parse(jsonMatch[1]);
+          } catch {
+            throw new Error('Failed to parse AI response as JSON');
+          }
+        } else {
+          throw new Error('Could not find valid JSON in AI response');
+        }
+      }
+
+      // Sanitize and validate the response
+      const sanitizedResponse = sanitizeResponse(parsedResponse);
+      
+      setResult(sanitizedResponse);
+      setShowResult(true);
+      setCooldown(COOLDOWN_TIME);
+    } catch (error) {
+      console.error('Analysis failed:', error);
+      setError('Analysis failed. Please try again in a few moments.');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   return (
     <div className="min-h-screen py-12">
