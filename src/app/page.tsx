@@ -35,7 +35,7 @@ const features = [
   {
     icon: Shield,
     title: 'AI-Powered Analysis',
-    description: 'Advanced smart contract analysis powered by Google Gemini AI'
+    description: 'Advanced smart contract analysis powered by Finetuned AI'
   },
   {
     icon: Lightning,
@@ -142,7 +142,7 @@ export default function Home() {
                 <span className="text-emerald-400">SECURITY</span>
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-xl">
-                Secure your smart contracts with AI-powered analysis and on-chain verification. Get instant security audits powered by Google Gemini AI.
+                Secure your smart contracts with AI-powered analysis and on-chain verification. Get instant security audits powered by Finetuned AI.
               </p>
               <div className="flex gap-4">
                 <Link href="/audit">
