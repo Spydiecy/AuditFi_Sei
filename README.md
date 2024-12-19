@@ -1,6 +1,7 @@
 # AuditFi 🛡️
 
 **Next-generation smart contract security powered by AI, delivering instant, on-chain audit reports across multiple networks.**
+
 ![image](https://github.com/user-attachments/assets/d9818150-a88a-4e29-b68b-2b2270a0bfca)
 
 ---
@@ -83,7 +84,7 @@
 ---
 
 ## 🌐 Live Demo  
-[View Live Demo](#https://auditfi.vercel.app/)
+[View Live Demo](https://auditfi.vercel.app/)
 
 ---
 
@@ -97,8 +98,11 @@
 
 ## 📸 Screenshots  
 ![image](https://github.com/user-attachments/assets/14250a80-5867-4b18-bf76-0181ea00b952)
+
 ![image](https://github.com/user-attachments/assets/33df6fe3-caec-47fa-a0dc-29ba508e996f)
+
 ![image](https://github.com/user-attachments/assets/739ce36e-6f36-4857-86dd-b930f3468128)
+
 ![image](https://github.com/user-attachments/assets/e5ef7daa-d0d7-4aa3-b431-db511c738292)
 
 ---
@@ -113,4 +117,3 @@ This project is licensed under the MIT License - see the [LICENSE](#) file for d
 
 - **Twitter**: [@AuditFi_ai](#)  
 - **Email**: [auditfi.ai@gmail.com](mailto:auditfi.ai@gmail.com)
-```
