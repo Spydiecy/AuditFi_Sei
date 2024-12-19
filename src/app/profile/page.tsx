@@ -58,66 +58,73 @@ export default function ProfilePage() {
       const allAudits: UserAudit[] = [];
       const chainCounts: Record<string, number> = {};
       let totalStars = 0;
-
-      await Promise.all(Object.entries(CHAIN_CONFIG).map(async ([chainKey, chainData]) => {
+  
+      for (const [chainKey, chainData] of Object.entries(CHAIN_CONFIG)) {
         try {
+          console.log(`Fetching from ${chainKey}...`);
           const provider = new ethers.JsonRpcProvider(chainData.rpcUrls[0]);
+  
           const contract = new ethers.Contract(
             CONTRACT_ADDRESSES[chainKey as keyof typeof CONTRACT_ADDRESSES],
             AUDIT_REGISTRY_ABI,
             provider
           );
-
-          const currentBlock = await provider.getBlockNumber();
-          const fromBlock = Math.max(0, currentBlock - 10000);
-
-          const eventSignature = ethers.id(
-            "AuditRegistered(bytes32,uint8,string,address,uint256)"
-          );
-
-          const events = await provider.getLogs({
-            address: contract.getAddress(),
-            topics: [
-              eventSignature,
-              null,
-              ethers.zeroPadValue(userAddress, 32)
-            ],
-            fromBlock: fromBlock,
-            toBlock: 'latest'
-          });
-
-          const decodedEvents = events.map(log => {
-            const decoded = contract.interface.parseLog({
-              topics: log.topics as string[],
-              data: log.data
-            });
-            
-            return {
-              contractHash: decoded?.args[0],
-              stars: Number(decoded?.args[1]),
-              summary: decoded?.args[2],
-              timestamp: Number(decoded?.args[4]),
-              chain: chainKey as keyof typeof CHAIN_CONFIG
-            };
-          });
-
-          chainCounts[chainKey] = decodedEvents.length;
-          totalStars += decodedEvents.reduce((acc, curr) => acc + curr.stars, 0);
-          allAudits.push(...decodedEvents);
+  
+          // Get all audits in batches
+          const BATCH_SIZE = 50;
+          const totalContracts = await contract.getTotalContracts();
+          let processed = 0;
+  
+          while (processed < totalContracts) {
+            try {
+              const {
+                contractHashes,
+                stars,
+                summaries,
+                auditors,
+                timestamps
+              } = await contract.getAllAudits(processed, BATCH_SIZE);
+  
+              // Filter audits for the current user
+              for (let i = 0; i < contractHashes.length; i++) {
+                if (auditors[i].toLowerCase() === userAddress.toLowerCase()) {
+                  allAudits.push({
+                    contractHash: contractHashes[i],
+                    stars: Number(stars[i]),
+                    summary: summaries[i],
+                    timestamp: Number(timestamps[i]),
+                    chain: chainKey as keyof typeof CHAIN_CONFIG
+                  });
+  
+                  // Update chain counts and total stars
+                  chainCounts[chainKey] = (chainCounts[chainKey] || 0) + 1;
+                  totalStars += Number(stars[i]);
+                }
+              }
+  
+              processed += contractHashes.length;
+            } catch (batchError) {
+              console.error(`Error fetching batch at ${processed} from ${chainKey}:`, batchError);
+              break;
+            }
+          }
         } catch (chainError) {
           console.error(`Error fetching from ${chainKey}:`, chainError);
           chainCounts[chainKey] = 0;
         }
-      }));
-
+      }
+  
       const totalAudits = allAudits.length;
       
       setStats({
         totalAudits,
         averageStars: totalAudits > 0 ? totalStars / totalAudits : 0,
         chainBreakdown: chainCounts,
-        recentAudits: allAudits.sort((a, b) => b.timestamp - a.timestamp).slice(0, 5)
+        recentAudits: allAudits
+          .sort((a, b) => b.timestamp - a.timestamp)
+          .slice(0, 5)
       });
+  
     } catch (error) {
       console.error('Failed to fetch user stats:', error);
     } finally {
