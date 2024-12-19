@@ -56,7 +56,7 @@ const recentAudits: Audit[] = [
     summary: 'No critical vulnerabilities found. Code follows best practices.',
     auditor: '0xABc...123',
     timestamp: 1703116800,
-    chain: 'lineaSepolia'
+    chain: 'kaiaTestnet'
   },
   { 
     contractHash: '0x456...def',

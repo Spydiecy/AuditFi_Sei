@@ -13,16 +13,16 @@ import {
 } from 'phosphor-react';
 import Image from 'next/image';
 import { CHAIN_CONFIG } from '@/utils/web3';
-import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contracts';
+import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI, ChainKey } from '@/utils/contracts';
 
 interface AuditReport {
-  contractHash: string; 
-  transactionHash: string;  
+  contractHash: string;
+  transactionHash: string;
   stars: number;
   summary: string;
   auditor: string;
   timestamp: number;
-  chain: keyof typeof CHAIN_CONFIG;
+  chain: ChainKey;
 }
 
 interface FilterState {
@@ -49,51 +49,70 @@ export default function ReportsPage() {
     setIsLoading(true);
     try {
       const allAudits: AuditReport[] = [];
+      const BATCH_SIZE = 50;
   
-      await Promise.all(Object.entries(CHAIN_CONFIG).map(async ([chainKey, chainData]) => {
+      for (const [chainKey, chainData] of Object.entries(CHAIN_CONFIG)) {
         try {
+          console.log(`Fetching from ${chainKey}...`);
+          
           const provider = new ethers.JsonRpcProvider(chainData.rpcUrls[0]);
+  
           const contract = new ethers.Contract(
-            CONTRACT_ADDRESSES[chainKey as keyof typeof CONTRACT_ADDRESSES],
+            CONTRACT_ADDRESSES[chainKey as ChainKey],
             AUDIT_REGISTRY_ABI,
             provider
           );
   
-          const currentBlock = await provider.getBlockNumber();
-          const fromBlock = Math.max(0, currentBlock - 10000);
+          // Get total contracts for this chain
+          const totalContracts = await contract.getTotalContracts();
+          console.log(`Found ${totalContracts.toString()} contracts on ${chainKey}`);
   
-          // Get events directly
-          const events = await provider.getLogs({
-            address: contract.getAddress(),
-            topics: [ethers.id("AuditRegistered(bytes32,uint8,string,address,uint256)")],
-            fromBlock: fromBlock,
-            toBlock: 'latest'
-          });
+          // Fetch in batches
+          let processed = 0;
+          while (processed < totalContracts) {
+            try {
+              const {
+                contractHashes,
+                stars,
+                summaries,
+                auditors,
+                timestamps
+              } = await contract.getAllAudits(processed, BATCH_SIZE);
   
-          const decodedEvents = await Promise.all(events.map(async (event) => {
-            const decoded = contract.interface.parseLog({
-              topics: event.topics as string[],
-              data: event.data
-            });
-            
-            return {
-              contractHash: decoded?.args[0],
-              transactionHash: event.transactionHash, // Include the transaction hash
-              stars: Number(decoded?.args[1]),
-              summary: decoded?.args[2],
-              auditor: decoded?.args[3],
-              timestamp: Number(decoded?.args[4]),
-              chain: chainKey as keyof typeof CHAIN_CONFIG
-            };
-          }));
+              for (let i = 0; i < contractHashes.length; i++) {
+                const txHash = await contract.queryFilter(
+                  contract.filters.AuditRegistered(contractHashes[i]),
+                  -10000
+                ).then(events => events[events.length - 1]?.transactionHash || '');
   
-          allAudits.push(...decodedEvents);
+                allAudits.push({
+                  contractHash: contractHashes[i],
+                  transactionHash: txHash,
+                  stars: Number(stars[i]),
+                  summary: summaries[i],
+                  auditor: auditors[i],
+                  timestamp: Number(timestamps[i]),
+                  chain: chainKey as ChainKey
+                });
+              }
+  
+              processed += contractHashes.length;
+              console.log(`Processed ${processed}/${totalContracts} on ${chainKey}`);
+  
+            } catch (batchError) {
+              console.error(`Error fetching batch at ${processed} from ${chainKey}:`, batchError);
+              break;
+            }
+          }
+  
         } catch (chainError) {
-          console.error(`Error fetching from ${chainKey}:`, chainError);
+          console.error(`Error processing chain ${chainKey}:`, chainError);
         }
-      }));
+      }
   
+      console.log(`Total audits collected: ${allAudits.length}`);
       setReports(allAudits.sort((a, b) => b.timestamp - a.timestamp));
+  
     } catch (error) {
       console.error('Failed to fetch audits:', error);
     } finally {
@@ -148,11 +167,10 @@ export default function ReportsPage() {
       chain: report.chain,
       chainName: CHAIN_CONFIG[report.chain].chainName,
       exportDate: new Date().toISOString(),
-      // Add additional metadata
       network: {
         name: CHAIN_CONFIG[report.chain].chainName,
         chainId: CHAIN_CONFIG[report.chain].chainId,
-        contractAddress: CONTRACT_ADDRESSES[report.chain as keyof typeof CONTRACT_ADDRESSES],
+        contractAddress: CONTRACT_ADDRESSES[report.chain as ChainKey],
       },
       auditDate: new Date(Number(report.timestamp) * 1000).toLocaleString(),
     };
