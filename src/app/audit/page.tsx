@@ -168,6 +168,9 @@ const isSolidityCode = (code: string): boolean => {
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.kaiaTestnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.kaiaTestnet;
       setCurrentChain('kaiaTestnet');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.flowTestnet.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.flowTestnet;
+      setCurrentChain('flowTestnet');
     } else {
       throw new Error('Please switch to Linea Sepolia or Neo X TestNet or Kaia Testnet to register audits');
     }
