@@ -16,6 +16,7 @@
   - Linea Sepolia Testnet
   - Neo X Testnet
   - Kaia Testnet
+  - Flow Testnet
 
 - **On-Chain Verification**  
   All audit reports are permanently stored on the blockchain.
@@ -67,6 +68,12 @@
 - **RPC URL**: `https://kaia-kairos.blockpi.network/v1/rpc/public`  
 - **Chain ID**: 1001 (0x3E9)  
 - **Explorer**: [Kaia Scope](https://kairos.kaiascope.com)
+
+### Flow Testnet
+- **Network Name**: Flow TestNet
+- **RPC URL**: https://testnet.evm.nodes.onflow.org
+- **Chain ID**: 545 (0x221)
+- **Explorer**: [Flow Scan](https://evm-testnet.flowscan.io)
 
 ---
 
