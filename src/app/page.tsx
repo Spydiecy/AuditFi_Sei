@@ -72,7 +72,7 @@ const recentAudits: Audit[] = [
     summary: 'Excellent implementation with robust security measures.',
     auditor: '0xGHi...789',
     timestamp: 1702944000,
-    chain: 'lineaSepolia'
+    chain: 'flowTestnet'
   }
 ];
 
