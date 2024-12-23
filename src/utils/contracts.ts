@@ -2,7 +2,8 @@
 export const CONTRACT_ADDRESSES = {
     lineaSepolia: '0x03c4fb7563e593ca0625C1c64959AC56081785cE',
     neoX: '0x57fe5FC224a4609b0672bAd2563E5F2BF7c40E7B',
-    kaiaTestnet: '0xAC89706b3D307D5d2aC740Afad7eF95F5bA7224c'
+    kaiaTestnet: '0xAC89706b3D307D5d2aC740Afad7eF95F5bA7224c',
+    flowTestnet:'0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6'
   } as const;
 
   export const AUDIT_REGISTRY_ABI = [

@@ -71,6 +71,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://kaia-kairos.blockpi.network/v1/rpc/public'],
     blockExplorerUrls: ['https://kairos.kaiascope.com'],
     iconPath: '/chains/kaia.png'
+  },
+  flowTestnet: {
+    chainId: '0x221', // 545 in hex
+    chainName: 'Flow Testnet',
+    nativeCurrency: { 
+      name: 'FLOW', 
+      symbol: 'FLOW', 
+      decimals: 18 
+    },
+    rpcUrls: ['https://testnet.evm.nodes.onflow.org'],
+    blockExplorerUrls: ['https://evm-testnet.flowscan.io'],
+    iconPath: '/chains/flow.png' 
   }
 } as const;
 
