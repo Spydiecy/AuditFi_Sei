@@ -35,6 +35,7 @@
     "@types/aos": "^3.0.7",
     "aos": "^2.3.4",
     "ethers": "^6.13.4",
-    "phosphor-react": "^1.4.1"
+    "phosphor-react": "^1.4.1",
+    "solc": "^0.8.19"
   }
 }
