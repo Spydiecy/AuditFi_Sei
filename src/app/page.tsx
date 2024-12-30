@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { 
+import {
   Shield,
   ArrowRight,
   Star,
@@ -16,7 +16,9 @@ import {
   TelegramLogo,
   FileSearch,
   Robot,
-  Cube
+  Cube,
+  FileText,
+  TestTube,
 } from 'phosphor-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,11 +48,21 @@ const features = [
     icon: Code,
     title: 'On-Chain Verification',
     description: 'All audit reports are stored permanently on the blockchain'
-  }
+  },
+    {
+    icon: FileText,
+    title: 'Documentation Generation',
+    description: 'Gemini powered documentation for Solidity contracts'
+  },
+  {
+      icon: TestTube,
+      title: 'Test Suite Generation',
+      description: 'Multi-framework test case generation'
+    },
 ];
 
 const recentAudits: Audit[] = [
-  { 
+  {
     contractHash: '0x123...abc',
     stars: 5,
     summary: 'No critical vulnerabilities found. Code follows best practices.',
@@ -58,7 +70,7 @@ const recentAudits: Audit[] = [
     timestamp: 1703116800,
     chain: 'kaiaTestnet'
   },
-  { 
+  {
     contractHash: '0x456...def',
     stars: 4,
     summary: 'Minor optimizations suggested. Overall secure implementation.',
@@ -66,7 +78,7 @@ const recentAudits: Audit[] = [
     timestamp: 1703030400,
     chain: 'neoX'
   },
-  { 
+  {
     contractHash: '0x789...ghi',
     stars: 5,
     summary: 'Excellent implementation with robust security measures.',
@@ -85,7 +97,17 @@ const steps = [
   {
     icon: Robot,
     title: 'AI Analysis',
-    description: 'Our AI powered by Google Gemini analyzes your code for vulnerabilities'
+    description: 'Our Fintuned AI analyzes your code for vulnerabilities'
+  },
+    {
+    icon: FileText,
+    title: 'Generate Docs',
+    description: 'Generate comprehensive contract documentation with a single click'
+    },
+  {
+    icon: TestTube,
+    title: 'Test Suite',
+    description: 'Generate test suite with best practices for popular frameworks'
   },
   {
     icon: Cube,
@@ -98,6 +120,7 @@ const steps = [
     description: 'Get your smart contract verified and secure'
   }
 ];
+
 
 export default function Home() {
   useEffect(() => {
@@ -129,7 +152,7 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/10 via-[#0A0B0D] to-blue-900/10" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-        
+
         <div className="relative max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -142,7 +165,7 @@ export default function Home() {
                 <span className="text-emerald-400">SECURITY</span>
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-xl">
-                Secure your smart contracts with AI-powered analysis and on-chain verification. Get instant security audits powered by Finetuned AI.
+                Secure your smart contracts with AI-powered analysis, documentation, and on-chain verification. Generate test suites and comprehensive documentation effortlessly. Get instant security audits powered by Finetuned AI.
               </p>
               <div className="flex gap-4">
                 <Link href="/audit">
@@ -159,19 +182,22 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="hidden lg:block relative"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="hidden lg:block relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-lg" />
-              <Image
-                src="/screenshot.png"
-                alt="AuditFi Interface"
-                width={600}
-                height={400}
-                className="rounded-lg shadow-2xl border border-gray-800"
-              />
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-lg" />
+                <Image
+                    src="/screenshot.png"
+                    alt="AuditFi Interface"
+                    width={600}
+                    height={400}
+                    className="rounded-lg shadow-2xl border border-gray-800"
+                    priority={true} // Added priority
+                    layout="responsive"
+                    sizes="(max-width: 768px) 100vw, 600px"
+                />
             </motion.div>
           </div>
         </div>
@@ -189,12 +215,12 @@ export default function Home() {
             <h2 className="text-3xl font-bold font-mono mb-4">
               How It Works
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Secure your smart contracts in four simple steps
-            </p>
+              <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+                  Secure your smart contracts in six simple steps
+              </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-6 gap-8">
             {steps.map((step, index) => (
               <div
                 key={index}
@@ -208,8 +234,8 @@ export default function Home() {
                 <step.icon size={32} className="text-emerald-400 mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
                 <p className="text-gray-400">{step.description}</p>
-                {index < 3 && (
-                  <ArrowRight 
+                {index < 5 && (
+                  <ArrowRight
                     className="absolute -right-4 top-1/2 transform -translate-y-1/2 text-emerald-400"
                     size={24}
                   />
@@ -233,11 +259,11 @@ export default function Home() {
               Powered by Advanced Technology
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Combining AI analysis with blockchain verification for comprehensive smart contract security
+              Combining AI analysis, documentation generation, test suite, with blockchain verification for comprehensive smart contract security
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-5 gap-8">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -281,6 +307,7 @@ export default function Home() {
                   width={40}
                   height={40}
                   className="rounded-full"
+                  layout='fixed'
                 />
                 <div>
                   <h3 className="font-semibold">{chain.chainName}</h3>
@@ -317,7 +344,7 @@ export default function Home() {
               </thead>
               <tbody>
                 {recentAudits.map((audit, index) => (
-                  <tr 
+                  <tr
                     key={index}
                     className="border-b border-gray-800/50 hover:bg-gray-800/30 transition-colors duration-200"
                   >
@@ -332,6 +359,7 @@ export default function Home() {
                           width={16}
                           height={16}
                           className="rounded-full"
+                            layout="fixed"
                         />
                         <span className="text-gray-200">
                           {CHAIN_CONFIG[audit.chain as keyof typeof CHAIN_CONFIG].chainName}
@@ -403,7 +431,7 @@ export default function Home() {
             {/* Logo & Description */}
             <div className="col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <Image 
+                <Image
                   src="/logo.svg"
                   alt="AuditFi Logo"
                   width={32}
@@ -414,37 +442,37 @@ export default function Home() {
                 </span>
               </div>
               <p className="text-gray-400 mb-4">
-                Next-generation smart contract security powered by AI. 
-                Get instant audits and on-chain verification for your Web3 projects.
+                  Next-generation smart contract security powered by AI.
+                  Get instant audits, documentation generation, and test suites for your Web3 projects.
               </p>
               <div className="flex space-x-4">
-                <a 
-                  href="https://twitter.com/auditfi" 
-                  target="_blank" 
+                <a
+                  href="https://twitter.com/auditfi"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-emerald-400 transition-colors"
                 >
                   <TwitterLogo size={24} />
                 </a>
-                <a 
-                  href="https://github.com/auditfi" 
-                  target="_blank" 
+                <a
+                  href="https://github.com/auditfi"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-emerald-400 transition-colors"
                 >
                   <GithubLogo size={24} />
                 </a>
-                <a 
-                  href="https://discord.gg/auditfi" 
-                  target="_blank" 
+                <a
+                  href="https://discord.gg/auditfi"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-emerald-400 transition-colors"
                 >
                   <DiscordLogo size={24} />
                 </a>
-                <a 
-                  href="https://t.me/auditfi" 
-                  target="_blank" 
+                <a
+                  href="https://t.me/auditfi"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-emerald-400 transition-colors"
                 >
@@ -499,7 +527,7 @@ export default function Home() {
           </div>
 
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} AuditFi. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} AuditFi. All rights reserved.</p>
           </div>
         </div>
       </footer>
