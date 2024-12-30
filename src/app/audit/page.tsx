@@ -178,7 +178,7 @@ const isSolidityCode = (code: string): boolean => {
       contractAddress = CONTRACT_ADDRESSES.flowTestnet;
       setCurrentChain('flowTestnet');
     } else {
-      throw new Error('Please switch to Linea Sepolia or Neo X TestNet or Kaia Testnet to register audits');
+      throw new Error('Please switch to any supported networks to register audits');
     }
 
       const contract = new ethers.Contract(

@@ -57,7 +57,7 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     chainName: 'Neo X Mainnet',
     nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
     rpcUrls: ['https://mainnet-1.rpc.banelabs.org/'],
-    blockExplorerUrls: ['https://xexplorer.neo.org'],
+    blockExplorerUrls: ['https://xexplorer.neo.org/'],
     iconPath: '/chains/neox.png'
   },
   neoXTestnet: {
@@ -65,7 +65,7 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     chainName: 'Neo X TestNet',
     nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
     rpcUrls: ['https://neoxt4seed1.ngd.network'],
-    blockExplorerUrls: ['https://xt4scan.ngd.network'],
+    blockExplorerUrls: ['https://xt4scan.ngd.network/'],
     iconPath: '/chains/neox.png'
   },
   kaiaTestnet: {

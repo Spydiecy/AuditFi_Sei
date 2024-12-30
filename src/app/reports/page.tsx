@@ -80,10 +80,10 @@ export default function ReportsPage() {
               } = await contract.getAllAudits(processed, BATCH_SIZE);
   
               for (let i = 0; i < contractHashes.length; i++) {
-                const txHash = await contract.queryFilter(
-                  contract.filters.AuditRegistered(contractHashes[i]),
-                  -10000
-                ).then(events => events[events.length - 1]?.transactionHash || '');
+                const filter = contract.filters.AuditRegistered(contractHashes[i]);
+                const blockNumber = await provider.getBlockNumber();
+                const events = await contract.queryFilter(filter, 0, blockNumber);
+                const txHash = events[events.length - 1]?.transactionHash || '';
   
                 allAudits.push({
                   contractHash: contractHashes[i],
