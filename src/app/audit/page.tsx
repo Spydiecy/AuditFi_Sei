@@ -165,6 +165,9 @@ const isSolidityCode = (code: string): boolean => {
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.neoX.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.neoX;
       setCurrentChain('neoX');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.neoXTestnet.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.neoXTestnet;
+      setCurrentChain('neoXTestnet');
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.kaiaTestnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.kaiaTestnet;
       setCurrentChain('kaiaTestnet');
