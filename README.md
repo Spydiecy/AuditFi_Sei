@@ -2,21 +2,42 @@
 
 **Next-generation smart contract security powered by AI, delivering instant, on-chain audit reports across multiple networks.**
 
-![image](https://github.com/user-attachments/assets/d9818150-a88a-4e29-b68b-2b2270a0bfca)
+![image](https://github.com/user-attachments/assets/0f99a240-c581-46c4-a17b-02de9fc5b383)
 
 ---
 
 ## 🌟 Features
 
 - **AI-Powered Analysis**  
-  Leveraging Google's Gemini 2.0 ( Fintuned further ) for comprehensive smart contract security analysis.
+  Leveraging Google's Gemini 2.0 (Finetuned further) for comprehensive smart contract security analysis and documentation generation.
 
 - **Multi-Chain Support**  
   Currently supporting:
+  - NeoX Mainnet
   - Linea Sepolia Testnet
-  - Neo X Testnet
+  - NeoX Testnet
   - Kaia Testnet
   - Flow Testnet
+  - Telos Testnet
+
+- **Contract Builder & Templates**
+  - Pre-built ERC20 and NFT templates with enhanced features
+  - AI-assisted custom contract generation
+  - Modern gradient-based UI with improved template selection
+  - Interactive code generation with syntax highlighting
+  - ![image](https://github.com/user-attachments/assets/164a9c12-3ad6-42dd-9695-640ea1ff6d5d)
+
+- **Comprehensive Testing**
+  - Multi-framework test suite generation (Hardhat, Foundry, Remix)
+  - Gas optimization testing
+  - Interactive testing UI with framework selection
+  - ![image](https://github.com/user-attachments/assets/afa4582c-23a3-4ca5-9a7e-d585db6e962d)
+
+- **Smart Contract Documentation**
+  - AI-powered documentation generation
+  - Detailed JSON-based structure
+  - Downloadable markdown format
+  - ![image](https://github.com/user-attachments/assets/0cd40199-0346-4469-9300-7460a4cba199)
 
 - **On-Chain Verification**  
   All audit reports are permanently stored on the blockchain.
@@ -44,8 +65,8 @@
 ## 🔧 Tech Stack
 
 - **Frontend Framework**: Next.js 14  
-- **Styling**: Tailwind CSS  
-- **AI Integration**: Google Gemini AI ( Finetuned for reviews )
+- **Styling**: Tailwind CSS, Shadcn UI  
+- **AI Integration**: Google Gemini AI (Finetuned for reviews)
 - **Blockchain Interaction**: ethers.js  
 - **Animation**: Framer Motion  
 - **Icons**: Phosphor Icons  
@@ -111,23 +132,26 @@
 - **/audit** - AI-powered smart contract analysis  
 - **/reports** - View all audit reports across chains  
 - **/profile** - User-specific audit history and statistics  
+- **/build** - Smart contract builder with templates
+- **/docs** - AI-generated documentation
+- **/test** - Test suite generation
 
 ---
 
 ## 📸 Screenshots  
-![image](https://github.com/user-attachments/assets/14250a80-5867-4b18-bf76-0181ea00b952)
 
-![image](https://github.com/user-attachments/assets/33df6fe3-caec-47fa-a0dc-29ba508e996f)
+![image](https://github.com/user-attachments/assets/eaa87211-fe4f-4e83-b319-e7a3da936995)
 
-![image](https://github.com/user-attachments/assets/739ce36e-6f36-4857-86dd-b930f3468128)
+![image](https://github.com/user-attachments/assets/cb52587b-f3b8-4eef-a15d-6051f285cdaf)
 
-![image](https://github.com/user-attachments/assets/e5ef7daa-d0d7-4aa3-b431-db511c738292)
+![Screenshot 2024-12-30 185638](https://github.com/user-attachments/assets/94c1a2bc-3147-40fc-8ceb-374505d729e0)
 
----
+![image](https://github.com/user-attachments/assets/8872e5b7-b27b-423e-9ec1-970fa0ce5d5a)
+
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under - see the [LICENSE](LICENSE) file for details.
 
 ---
 
