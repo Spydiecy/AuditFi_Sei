@@ -49,7 +49,7 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     chainName: 'Linea Sepolia',
     nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://rpc.sepolia.linea.build'],
-    blockExplorerUrls: ['https://sepolia.lineascan.build/'],
+    blockExplorerUrls: ['https://sepolia.lineascan.build'],
     iconPath: '/chains/linea.png'
   },
   neoX: {
@@ -57,7 +57,7 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     chainName: 'Neo X Mainnet',
     nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
     rpcUrls: ['https://mainnet-1.rpc.banelabs.org/'],
-    blockExplorerUrls: ['https://xexplorer.neo.org/'],
+    blockExplorerUrls: ['https://xexplorer.neo.org'],
     iconPath: '/chains/neox.png'
   },
   neoXTestnet: {
@@ -65,7 +65,7 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     chainName: 'Neo X TestNet',
     nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
     rpcUrls: ['https://neoxt4seed1.ngd.network'],
-    blockExplorerUrls: ['https://xt4scan.ngd.network/'],
+    blockExplorerUrls: ['https://xt4scan.ngd.network'],
     iconPath: '/chains/neox.png'
   },
   kaiaTestnet: {
@@ -91,6 +91,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://testnet.evm.nodes.onflow.org'],
     blockExplorerUrls: ['https://evm-testnet.flowscan.io'],
     iconPath: '/chains/flow.png' 
+  },
+  telosTestnet: {
+    chainId: '0x29', // 47 in hex
+    chainName: 'Telos Testnet',
+    nativeCurrency: { 
+      name: 'TLOS', 
+      symbol: 'TLOS', 
+      decimals: 18 
+    },
+    rpcUrls: ['https://testnet.telos.net/evm'],
+    blockExplorerUrls: ['https://testnet.teloscan.io'],
+    iconPath: '/chains/telos.png' 
   }
 } as const;
 

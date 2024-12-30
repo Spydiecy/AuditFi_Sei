@@ -71,9 +71,15 @@
 
 ### Flow Testnet
 - **Network Name**: Flow TestNet
-- **RPC URL**: https://testnet.evm.nodes.onflow.org
+- **RPC URL**: `https://testnet.evm.nodes.onflow.org`
 - **Chain ID**: 545 (0x221)
 - **Explorer**: [Flow Scan](https://evm-testnet.flowscan.io)
+
+### Telos Testnet
+- **Network Name**: Telos TestNet
+- **RPC URL**: `https://testnet.telos.net/evm`
+- **Chain ID**: 47 (0x29)
+- **Explorer**: [Flow Scan](https://testnet.teloscan.io/)
 
 ### Linea Sepolia  
 - **RPC URL**: `https://rpc.sepolia.linea.build`  

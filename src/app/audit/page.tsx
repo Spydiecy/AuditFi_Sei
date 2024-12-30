@@ -171,6 +171,9 @@ const isSolidityCode = (code: string): boolean => {
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.kaiaTestnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.kaiaTestnet;
       setCurrentChain('kaiaTestnet');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.telosTestnet.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.telosTestnet;
+      setCurrentChain('telosTestnet');
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.flowTestnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.flowTestnet;
       setCurrentChain('flowTestnet');
