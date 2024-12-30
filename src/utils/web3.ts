@@ -53,6 +53,14 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     iconPath: '/chains/linea.png'
   },
   neoX: {
+    chainId: '0xBA93', // 47763 in hex
+    chainName: 'Neo X Mainnet',
+    nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
+    rpcUrls: ['https://mainnet-1.rpc.banelabs.org/'],
+    blockExplorerUrls: ['https://mainnet-1.rpc.banelabs.org/'],
+    iconPath: '/chains/neox.png'
+  },
+  neoXTestnet: {
     chainId: '0xBA9304', // 12227332 in hex
     chainName: 'Neo X TestNet',
     nativeCurrency: { name: 'GAS', symbol: 'GAS', decimals: 18 },
