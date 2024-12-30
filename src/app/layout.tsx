@@ -163,6 +163,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   Contract-builder
                 </Link>
                 <Link 
+                  href="/testcase-generator" 
+                  className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
+                >
+                  Test
+                </Link>
+                <Link 
                   href="/audit" 
                   className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
                 >
