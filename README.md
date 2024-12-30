@@ -54,14 +54,14 @@
 
 ## 🌐 Supported Networks
 
-### Linea Sepolia  
-- **RPC URL**: `https://rpc.sepolia.linea.build`  
-- **Chain ID**: 59141 (0xE704)  
-- **Explorer**: [Linea Scan](https://sepolia.lineascan.build/)
+### Neo X Mainnet  
+- **RPC URL**: `https://mainnet-1.rpc.banelabs.org/`  
+- **Chain ID**: 47763 (0xBA93)  
+- **Explorer**: [NeoX Scan](https://xexplorer.neo.org/)
 
 ### Neo X TestNet  
 - **RPC URL**: `https://neoxt4seed1.ngd.network`  
-- **Chain ID**: 12227332 (0xBA9C44)  
+- **Chain ID**: 12227332 (0xBA9304)  
 - **Explorer**: [NeoX Scan](https://xt4scan.ngd.network/)
 
 ### Kaia Testnet  
@@ -74,6 +74,11 @@
 - **RPC URL**: https://testnet.evm.nodes.onflow.org
 - **Chain ID**: 545 (0x221)
 - **Explorer**: [Flow Scan](https://evm-testnet.flowscan.io)
+
+### Linea Sepolia  
+- **RPC URL**: `https://rpc.sepolia.linea.build`  
+- **Chain ID**: 59141 (0xE704)  
+- **Explorer**: [Linea Scan](https://sepolia.lineascan.build/)
 
 ---
 
