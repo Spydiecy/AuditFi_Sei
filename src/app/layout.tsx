@@ -181,6 +181,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
                   Reports
                 </Link>
                 <Link 
+                  href="/documentor" 
+                  className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
+                >
+                  Documentor
+                </Link>
+                <Link 
                   href="/profile" 
                   className="text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2"
                 >
