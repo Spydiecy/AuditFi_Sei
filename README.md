@@ -86,7 +86,7 @@
 - **Chain ID**: 12227332 (0xBA9304)  
 - **Explorer**: [NeoX Scan](https://xt4scan.ngd.network/)
 
-### Open Campus Codex Sepolia
+### Educhain Testnet
 - **Network Name**: EDU Chain Testnet
 - **RPC URL**: `https://open-campus-codex-sepolia.drpc.org`
 - **Chain ID**: 656476 (0xA045C)
