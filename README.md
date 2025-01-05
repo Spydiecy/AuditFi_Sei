@@ -13,7 +13,8 @@
 
 - **Multi-Chain Support**  
   Currently supporting:
-  - NeoX Mainnet& Testnet
+  - NeoX Mainnet & Testnet
+  - Educhain Testnet
   - Ancient8 Testnet
   - Linea Sepolia Testnet
   - Kaia Testnet
@@ -84,6 +85,12 @@
 - **RPC URL**: `https://neoxt4seed1.ngd.network`  
 - **Chain ID**: 12227332 (0xBA9304)  
 - **Explorer**: [NeoX Scan](https://xt4scan.ngd.network/)
+
+### Open Campus Codex Sepolia
+- **Network Name**: EDU Chain Testnet
+- **RPC URL**: `https://open-campus-codex-sepolia.drpc.org`
+- **Chain ID**: 656476 (0xA045C)
+- **Explorer**: [Open Campus Codex Blockscout](https://opencampus-codex.blockscout.com)
 
 ### Ancient8 Testnet
 - **RPC URL**: `https://rpcv2-testnet.ancient8.gg`

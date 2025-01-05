@@ -85,6 +85,14 @@ const recentAudits: Audit[] = [
     auditor: '0xGHi...789',
     timestamp: 1702944000,
     chain: 'flowTestnet'
+  },
+  {
+    contractHash: '0x101...jkl',
+    stars: 5,
+    summary: 'Thoroughly audited with no vulnerabilities found.',
+    auditor: '0xJKl...101',
+    timestamp: 1702857600,
+    chain: 'educhainTestnet'
   }
 ];
 

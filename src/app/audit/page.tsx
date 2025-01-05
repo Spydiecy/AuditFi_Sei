@@ -180,6 +180,9 @@ const isSolidityCode = (code: string): boolean => {
     } else if (chainId.toLowerCase() === CHAIN_CONFIG.ancient8Testnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.ancient8Testnet;
       setCurrentChain('ancient8Testnet');
+    } else if (chainId.toLowerCase() === CHAIN_CONFIG.educhainTestnet.chainId.toLowerCase()) {
+      contractAddress = CONTRACT_ADDRESSES.educhainTestnet;
+      setCurrentChain('educhainTestnet');
     } else {
       throw new Error('Please switch to any supported networks to register audits');
     }

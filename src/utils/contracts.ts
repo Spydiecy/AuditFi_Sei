@@ -7,6 +7,7 @@ export const CONTRACT_ADDRESSES = {
     flowTestnet:'0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6',
     telosTestnet: '0xF887B4D3b17C12C86cc917cF72fb8881f866a847',
     ancient8Testnet: '0xF887B4D3b17C12C86cc917cF72fb8881f866a847',
+    educhainTestnet: '0x1AE7ED8C5Cc87E84b91eD8627Ac18540cB7a744F',
   } as const;
 
   export const AUDIT_REGISTRY_ABI = [

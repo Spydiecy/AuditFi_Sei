@@ -115,6 +115,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://rpcv2-testnet.ancient8.gg'],
     blockExplorerUrls: ['https://ancient8.testnet.routescan.io', 'https://scanv2-testnet.ancient8.gg'],
     iconPath: '/chains/ancient8.png' 
+  },
+  educhainTestnet: {
+    chainId: '0xA045C', // 656476 in hex
+    chainName: 'EDU Chain Testnet',
+    nativeCurrency: { 
+      name: 'EDU', 
+      symbol: 'EDU', 
+      decimals: 18 
+    },
+    rpcUrls: ['https://open-campus-codex-sepolia.drpc.org'],
+    blockExplorerUrls: ['https://opencampus-codex.blockscout.com'],
+    iconPath: '/chains/educhain.png'
   }
 } as const;
 
