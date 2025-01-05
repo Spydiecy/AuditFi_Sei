@@ -103,6 +103,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://testnet.telos.net/evm'],
     blockExplorerUrls: ['https://testnet.teloscan.io'],
     iconPath: '/chains/telos.png' 
+  },
+  ancient8Testnet: {
+    chainId: '0x1AD1BA8', // 28122024 in hex
+    chainName: 'Ancient8 Testnet',
+    nativeCurrency: { 
+      name: 'ETH', 
+      symbol: 'ETH', 
+      decimals: 18 
+    },
+    rpcUrls: ['https://rpcv2-testnet.ancient8.gg'],
+    blockExplorerUrls: ['https://ancient8.testnet.routescan.io', 'https://scanv2-testnet.ancient8.gg'],
+    iconPath: '/chains/ancient8.png' 
   }
 } as const;
 
