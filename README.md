@@ -13,9 +13,9 @@
 
 - **Multi-Chain Support**  
   Currently supporting:
-  - NeoX Mainnet
+  - NeoX Mainnet& Testnet
+  - Ancient8 Testnet
   - Linea Sepolia Testnet
-  - NeoX Testnet
   - Kaia Testnet
   - Flow Testnet
   - Telos Testnet
@@ -84,6 +84,11 @@
 - **RPC URL**: `https://neoxt4seed1.ngd.network`  
 - **Chain ID**: 12227332 (0xBA9304)  
 - **Explorer**: [NeoX Scan](https://xt4scan.ngd.network/)
+
+### Ancient8 Testnet
+- **RPC URL**: `https://rpcv2-testnet.ancient8.gg`
+- **Chain ID**: 28122024 (0x1AD1BA8)
+- **Explorer**: [Ancient8 Scan](https://ancient8.testnet.routescan.io)
 
 ### Kaia Testnet  
 - **RPC URL**: `https://kaia-kairos.blockpi.network/v1/rpc/public`  
