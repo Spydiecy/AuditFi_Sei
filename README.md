@@ -9,7 +9,7 @@
 ## 🌟 Features
 
 - **AI-Powered Analysis**  
-  Leveraging Google's Gemini 2.0 (Finetuned further) for comprehensive smart contract security analysis and documentation generation.
+  Leveraging Ai (Finetuned further) for comprehensive smart contract security analysis and documentation generation.
 
 - **Multi-Chain Support**  
   Currently supporting:
