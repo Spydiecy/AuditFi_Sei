@@ -68,7 +68,7 @@ const recentAudits: Audit[] = [
     summary: 'No critical vulnerabilities found. Code follows best practices.',
     auditor: '0xABc...123',
     timestamp: 1703116800,
-    chain: 'ancient8Testnet'
+    chain: 'creatorChainTestnet'
   },
   {
     contractHash: '0x456...def',
@@ -76,7 +76,7 @@ const recentAudits: Audit[] = [
     summary: 'Minor optimizations suggested. Overall secure implementation.',
     auditor: '0xDEf...456',
     timestamp: 1703030400,
-    chain: 'neoX'
+    chain: 'creatorChainTestnet'
   },
   {
     contractHash: '0x789...ghi',
@@ -84,15 +84,7 @@ const recentAudits: Audit[] = [
     summary: 'Excellent implementation with robust security measures.',
     auditor: '0xGHi...789',
     timestamp: 1702944000,
-    chain: 'flowTestnet'
-  },
-  {
-    contractHash: '0x101...jkl',
-    stars: 5,
-    summary: 'Thoroughly audited with no vulnerabilities found.',
-    auditor: '0xJKl...101',
-    timestamp: 1702857600,
-    chain: 'educhainTestnet'
+    chain: 'creatorChainTestnet'
   }
 ];
 
@@ -309,14 +301,16 @@ export default function Home() {
                 data-aos-delay={index * 100}
                 className="hover-gradient-effect flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
               >
-                <Image
-                  src={chain.iconPath}
-                  alt={chain.chainName}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                  layout='fixed'
-                />
+                {chain?.iconPath && (
+                  <Image
+                    src={chain.iconPath}
+                    alt={chain.chainName}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                    layout='fixed'
+                  />
+                )}
                 <div>
                   <h3 className="font-semibold">{chain.chainName}</h3>
                   <p className="text-gray-400 text-sm">{chain.nativeCurrency.symbol}</p>
