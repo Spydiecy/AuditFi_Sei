@@ -1,173 +1,130 @@
 # AuditFi 🛡️
 
-**Next-generation smart contract security powered by AI, delivering instant, on-chain audit reports across multiple networks.**
+**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Creator Network.**
 
 ![image](https://github.com/user-attachments/assets/0f99a240-c581-46c4-a17b-02de9fc5b383)
 
----
-
 ## 🌟 Features
 
-- **AI-Powered Analysis**  
-  Leveraging Ai (Finetuned further) for comprehensive smart contract security analysis and documentation generation.
+- **Advanced AI-Powered Analysis**  
+  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for Creator Network contracts.
 
-- **Multi-Chain Support**  
-  Currently supporting:
-  - NeoX Mainnet & Testnet
-  - Educhain Testnet
-  - Ancient8 Testnet
-  - Linea Sepolia Testnet
-  - Kaia Testnet
-  - Flow Testnet
-  - Telos Testnet
+- **Creator Network Integration**  
+  Fully optimized for Creator Network's ecosystem:
+  - Direct deployment to Creator Network Testnet
+  - Network-specific security checks
+  - Optimized gas analysis for Creator Network
+  - Instant verification on Creator Network Explorer
 
-- **Contract Builder & Templates**
-  - Pre-built ERC20 and NFT templates with enhanced features
-  - AI-assisted custom contract generation
-  - Modern gradient-based UI with improved template selection
-  - Interactive code generation with syntax highlighting
-  - ![image](https://github.com/user-attachments/assets/164a9c12-3ad6-42dd-9695-640ea1ff6d5d)
+- **Zero-Dependency Contract Templates**
+  - Custom-built ERC20 implementation (no OpenZeppelin)
+  - Native ERC721 implementation
+  - AI-assisted contract generation
+  - Modern gradient-based UI
+  - Network-specific optimizations
+  ![image](https://github.com/user-attachments/assets/164a9c12-3ad6-42dd-9695-640ea1ff6d5d)
 
-- **Comprehensive Testing**
-  - Multi-framework test suite generation (Hardhat, Foundry, Remix)
-  - Gas optimization testing
-  - Interactive testing UI with framework selection
-  - ![image](https://github.com/user-attachments/assets/afa4582c-23a3-4ca5-9a7e-d585db6e962d)
-
-- **Smart Contract Documentation**
-  - AI-powered documentation generation
-  - Detailed JSON-based structure
-  - Downloadable markdown format
-  - ![image](https://github.com/user-attachments/assets/0cd40199-0346-4469-9300-7460a4cba199)
+- **Secure Contract Building**
+  - Custom base contracts without external dependencies
+  - Built-in security best practices
+  - Creator Network-specific optimizations
+  - Complete event emission for tracking
+  - Access control and safety checks
 
 - **On-Chain Verification**  
-  All audit reports are permanently stored on the blockchain.
+  - All audit reports stored on Creator Network
+  - Permanent, immutable audit history
+  - Direct explorer integration
+  - Full transparency and traceability
 
-- **Real-time Analysis**  
-  Get instant security assessments of your smart contracts.
-
-- **Interactive Dashboard**  
-  Beautiful UI for viewing and managing audit reports.
-
-- **Cross-Chain Reports**  
-  View and compare audits across different networks.
-
----
+- **Interactive Development Experience**
+  - Real-time code generation
+  - Instant security analysis
+  - Live deployment status
+  - Network connection monitoring
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
-- Access to testnet tokens for supported networks
+- Creator Network Testnet access
+- CETH tokens for deployment
 
----
+### Network Configuration
+**Creator Network Testnet**
+- **RPC URL**: `https://66665.rpc.thirdweb.com`
+- **Chain ID**: Hex: `0x10469`
+- **Explorer**: [Creator Network Explorer](https://explorer.creatorchain.io)
+- **Currency**: CETH
 
 ## 🔧 Tech Stack
 
-- **Frontend Framework**: Next.js 14  
-- **Styling**: Tailwind CSS, Shadcn UI  
-- **AI Integration**: Google Gemini AI (Finetuned for reviews)
-- **Blockchain Interaction**: ethers.js  
-- **Animation**: Framer Motion  
-- **Icons**: Phosphor Icons  
-
----
-
-## 🌐 Supported Networks
-
-### Neo X Mainnet  
-- **RPC URL**: `https://mainnet-1.rpc.banelabs.org/`  
-- **Chain ID**: 47763 (0xBA93)  
-- **Explorer**: [NeoX Scan](https://xexplorer.neo.org/)
-
-### Neo X TestNet  
-- **RPC URL**: `https://neoxt4seed1.ngd.network`  
-- **Chain ID**: 12227332 (0xBA9304)  
-- **Explorer**: [NeoX Scan](https://xt4scan.ngd.network/)
-
-### Educhain Testnet
-- **Network Name**: EDU Chain Testnet
-- **RPC URL**: `https://open-campus-codex-sepolia.drpc.org`
-- **Chain ID**: 656476 (0xA045C)
-- **Explorer**: [Open Campus Codex Blockscout](https://opencampus-codex.blockscout.com)
-
-### Ancient8 Testnet
-- **RPC URL**: `https://rpcv2-testnet.ancient8.gg`
-- **Chain ID**: 28122024 (0x1AD1BA8)
-- **Explorer**: [Ancient8 Scan](https://ancient8.testnet.routescan.io)
-
-### Kaia Testnet  
-- **RPC URL**: `https://kaia-kairos.blockpi.network/v1/rpc/public`  
-- **Chain ID**: 1001 (0x3E9)  
-- **Explorer**: [Kaia Scope](https://kairos.kaiascope.com)
-
-### Flow Testnet
-- **Network Name**: Flow TestNet
-- **RPC URL**: `https://testnet.evm.nodes.onflow.org`
-- **Chain ID**: 545 (0x221)
-- **Explorer**: [Flow Scan](https://evm-testnet.flowscan.io)
-
-### Telos Testnet
-- **Network Name**: Telos TestNet
-- **RPC URL**: `https://testnet.telos.net/evm`
-- **Chain ID**: 47 (0x29)
-- **Explorer**: [Flow Scan](https://testnet.teloscan.io/)
-
-### Linea Sepolia  
-- **RPC URL**: `https://rpc.sepolia.linea.build`  
-- **Chain ID**: 59141 (0xE704)  
-- **Explorer**: [Linea Scan](https://sepolia.lineascan.build/)
-
----
+- **Frontend**: Next.js 14, Tailwind CSS, Shadcn UI
+- **AI Engine**: Mistral AI (Large Model)
+- **Blockchain**: ethers.js
+- **UI/UX**: Framer Motion, Phosphor Icons
+- **Validation**: Zod Schema Validation
 
 ## 📊 Security Rating System
 
-| Rating       | Description                                                                                   |
-|--------------|-----------------------------------------------------------------------------------------------|
-| ⭐⭐⭐⭐⭐       | Perfect: Zero vulnerabilities, optimal gas usage                                              |
-| ⭐⭐⭐⭐         | Very Good: No critical issues, minor optimizations needed                                     |
-| ⭐⭐⭐           | Good: No critical but has high severity issues                                               |
-| ⭐⭐             | Poor: Has critical vulnerability or multiple high severity issues                           |
-| ⭐               | Very Poor: Multiple critical and high severity vulnerabilities                             |
-| 0               | Critical: Fundamental security flaws, unsafe for deployment                                |
+| Rating | Description |
+|--------|-------------|
+| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Creator Network |
+| ⭐⭐⭐⭐ | Very Good: No critical issues, minor optimizations needed |
+| ⭐⭐⭐ | Good: No critical but has high severity issues |
+| ⭐⭐ | Poor: Has critical vulnerability or multiple high severity issues |
+| ⭐ | Very Poor: Multiple critical and high severity vulnerabilities |
+| 0 | Critical: Fundamental security flaws, unsafe for deployment |
 
----
+## 🌐 Live Demo
+Visit [AuditFi](https://auditfi-creator.netlify.app/) to try it out on Creator Network!
 
-## 🌐 Live Demo  
-[View Live Demo](https://auditfi.vercel.app/)
+## 🔍 Key Features
 
----
+- **AI-Powered Analysis**
+  - Real-time security scanning
+  - Custom contract validation
+  - Gas optimization suggestions
+  - Best practices enforcement
 
-## 🔍 Key Pages
+- **Contract Building**
+  - Zero-dependency templates
+  - Custom implementations
+  - Network-specific optimizations
+  - Built-in security features
 
-- **/audit** - AI-powered smart contract analysis  
-- **/reports** - View all audit reports across chains  
-- **/profile** - User-specific audit history and statistics  
-- **/build** - Smart contract builder with templates
-- **/docs** - AI-generated documentation
-- **/test** - Test suite generation
+- **Deployment & Verification**
+  - One-click deployment to Creator Network
+  - Automatic contract verification
+  - Transaction monitoring
+  - Explorer integration
 
----
+## 📸 Recent Updates
 
-## 📸 Screenshots  
+- Integrated Mistral AI for enhanced analysis
+- Removed OpenZeppelin dependencies for better control
+- Added custom ERC20 and ERC721 implementations
+- Optimized for Creator Network deployment
+- Enhanced security validation
+- Improved gas optimization analysis
+- Added real-time security notes display
 
-![image](https://github.com/user-attachments/assets/eaa87211-fe4f-4e83-b319-e7a3da936995)
+## 🔗 Network Integration
 
-![image](https://github.com/user-attachments/assets/cb52587b-f3b8-4eef-a15d-6051f285cdaf)
+Exclusively supporting Creator Network Testnet for:
+- Contract deployment
+- Security analysis
+- Transaction verification
+- On-chain audit storage
+- Gas optimization
+- Network-specific features
 
-![Screenshot 2024-12-30 185638](https://github.com/user-attachments/assets/94c1a2bc-3147-40fc-8ceb-374505d729e0)
+## 📬 Contact & Support
 
-![image](https://github.com/user-attachments/assets/8872e5b7-b27b-423e-9ec1-970fa0ce5d5a)
-
+- Join the [Creator Network Discord](https://discord.gg/39yKXyJr8F)
+- Follow Creator Network updates on [Twitter](https://x.com/AuditFi_ai)
 
 ## 📄 License
 
-This project is licensed under - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📬 Contact
-
-- **Twitter**: [@AuditFi_ai](#)  
-- **Email**: [auditfi.ai@gmail.com](mailto:auditfi.ai@gmail.com)
+This project is licensed under MIT - see the [LICENSE](LICENSE) file for details.
