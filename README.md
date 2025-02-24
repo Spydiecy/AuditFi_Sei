@@ -2,7 +2,7 @@
 
 **Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Creator Network.**
 
-![image](https://github.com/user-attachments/assets/0f99a240-c581-46c4-a17b-02de9fc5b383)
+![image](https://github.com/user-attachments/assets/8cd960b4-a063-4875-917b-559d09303db1)
 
 ## 🌟 Features
 
@@ -22,7 +22,7 @@
   - AI-assisted contract generation
   - Modern gradient-based UI
   - Network-specific optimizations
-  ![image](https://github.com/user-attachments/assets/164a9c12-3ad6-42dd-9695-640ea1ff6d5d)
+  - ![image](https://github.com/user-attachments/assets/079bf786-0a13-4dda-8c63-b1e1f66b0f72)
 
 - **Secure Contract Building**
   - Custom base contracts without external dependencies
@@ -36,12 +36,14 @@
   - Permanent, immutable audit history
   - Direct explorer integration
   - Full transparency and traceability
+  - ![image](https://github.com/user-attachments/assets/aba07183-5c47-412c-9653-6fc6c20f52c6)
 
 - **Interactive Development Experience**
   - Real-time code generation
   - Instant security analysis
   - Live deployment status
   - Network connection monitoring
+  - ![image](https://github.com/user-attachments/assets/b18563f4-32e1-4679-9483-8dedb7574a16)
 
 ## 🚀 Quick Start
 
@@ -99,6 +101,10 @@ Visit [AuditFi](https://auditfi-creator.netlify.app/) to try it out on Creator N
   - Automatic contract verification
   - Transaction monitoring
   - Explorer integration
+
+- **Smart Contract Documentation & Testcase generation**
+  - ![image](https://github.com/user-attachments/assets/027c167d-ad15-4e28-841e-7bc63580d4f1)
+  - ![image](https://github.com/user-attachments/assets/5fffffd0-d0c7-4210-a1db-f263c8249cf1)
 
 ## 📸 Recent Updates
 
