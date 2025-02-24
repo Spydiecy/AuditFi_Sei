@@ -1,19 +1,22 @@
+// TestCaseGenerator.tsx
 "use client"
 
-import React, { JSX, useState } from 'react';
+import React, { JSX, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { 
-  FileCode, 
-  Robot, 
-  CircleNotch, 
-  Copy, 
+import { Mistral } from '@mistralai/mistralai';
+import {
+  FileCode,
+  Robot,
+  CircleNotch,
+  Copy,
   Check,
   TestTube,
   Code
 } from 'phosphor-react';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+const mistralClient = new Mistral({
+  apiKey: process.env.NEXT_PUBLIC_MISTRAL_API_KEY!
+});
 
 type TestFramework = 'hardhat' | 'foundry' | 'remix';
 
@@ -73,7 +76,7 @@ export default function TestCaseGenerator() {
   const [copySuccess, setCopySuccess] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -139,17 +142,34 @@ Return a structured list of testing steps without any extra text.`
     setIsGenerating(true);
     setError(null);
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-      const prompt = getPromptForFramework(contractCode, selectedFramework);
+      const response = await mistralClient.chat.complete({
+        model: "mistral-large-latest",
+        messages: [
+          {
+            role: "user",
+            content: getPromptForFramework(contractCode, selectedFramework),
+          },
+        ],
+        temperature: 0.1,
+        maxTokens: 4096,
+      });
 
-      const result = await model.generateContent(prompt);
-      const cleanCode = result.response.text()
-        .replace(/```[a-z]*\n/g, '')
-        .replace(/```/g, '')
-        .replace(/\*/g, '')
-        .trim();
-      
+      const generatedText = response.choices?.[0]?.message?.content || '';
+
+      let cleanCode = '';
+      if (typeof generatedText === 'string') {
+        // Remove any markdown-style code blocks (```)
+        cleanCode = generatedText
+          .replace(/```[a-z]*\n/g, '')
+          .replace(/```/g, '')
+          .replace(/\*/g, '')
+          .trim();
+      } else {
+        setGeneratedTests('');
+      }
+
       setGeneratedTests(cleanCode);
+
     } catch (error) {
       console.error('Test generation failed:', error);
       setError('Failed to generate test cases. Please try again.');
@@ -169,10 +189,10 @@ Return a structured list of testing steps without any extra text.`
   };
 
   return (
-    <div className="min-h-screen py-12">
+    <div className="min-h-screen py-12 bg-zinc-900 text-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-mono font-bold mb-4">Test Case Generator</h1>
+          <h1 className="text-3xl font-mono font-bold mb-4 text-emerald-400">Test Case Generator</h1>
           <p className="text-gray-400">Generate comprehensive test cases for your smart contracts using different testing frameworks</p>
           <AnimatePresence>
             {error && (
@@ -189,7 +209,7 @@ Return a structured list of testing steps without any extra text.`
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4">
+          <div className="flex flex-col space-y-4">
             <div className="grid grid-cols-3 gap-4 mb-4">
               {TESTING_OPTIONS.map((option) => (
                 <button
@@ -197,46 +217,62 @@ Return a structured list of testing steps without any extra text.`
                   onClick={() => setSelectedFramework(option.id)}
                   className={`p-4 rounded-lg border transition-all duration-200 text-left h-full
                     ${selectedFramework === option.id
-                      ? 'border-emerald-500 bg-emerald-500/10'
+                      ? 'border-emerald-500 bg-emerald-500/10 text-white'
                       : 'border-gray-800 hover:border-emerald-500/50'
                     }`}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className="text-emerald-400">{option.icon}</div>
-                    <span className="font-semibold">{option.name}</span>
+                    <span className="font-semibold text-white">{option.name}</span>
                   </div>
                   <p className="text-xs text-gray-400 mb-2">{option.description}</p>
                 </button>
               ))}
             </div>
 
-            <div 
-              className="h-[600px] bg-gray-900/50 rounded-lg border border-gray-800 hover-gradient-effect"
-              style={{
-                '--mouse-x': `${mousePosition.x}px`,
-                '--mouse-y': `${mousePosition.y}px`
-              } as React.CSSProperties}
+            <div
+              className="bg-gray-900/50 rounded-lg border border-gray-800"
             >
               <div className="p-4 border-b border-gray-800 flex items-center gap-2">
                 <Code className="text-emerald-400" size={20} />
-                <span className="font-mono">Contract Code</span>
+                <span className="font-mono text-white">Contract Code</span>
               </div>
-              
+
               <textarea
                 value={contractCode}
                 onChange={(e) => setContractCode(e.target.value)}
                 placeholder="Paste your smart contract code here..."
-                className="w-full h-[calc(100%-60px)] bg-transparent p-6 font-mono text-sm resize-none focus:outline-none"
+                className="w-full h-[400px] bg-transparent p-6 font-mono text-sm resize-none focus:outline-none text-white"
               />
             </div>
+             <button
+              onClick={generateTests}
+              disabled={!contractCode || isGenerating}
+              className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 ${isGenerating || !contractCode
+                ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                : 'bg-emerald-500 hover:bg-emerald-600 text-black'
+                }`}
+            >
+              {isGenerating ? (
+                <>
+                  <CircleNotch className="animate-spin" size={20} />
+                  Generating {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}...
+                </>
+              ) : (
+                <>
+                  <Robot size={20} />
+                  Generate {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}
+                </>
+              )}
+            </button>
           </div>
 
-          <div className="h-[700px] flex flex-col">
-            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800 hover-gradient-effect">
+          <div className="flex flex-col">
+            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800">
               <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <TestTube className="text-emerald-400" size={20} />
-                  <span className="font-mono">Generated {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}</span>
+                  <span className="font-mono text-white">Generated {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}</span>
                 </div>
                 {generatedTests && (
                   <button
@@ -249,9 +285,18 @@ Return a structured list of testing steps without any extra text.`
                 )}
               </div>
 
-              <div className="h-[calc(100%-60px)] overflow-auto p-6">
+              <div className="code-container">
                 {generatedTests ? (
-                  <pre className="font-mono text-sm whitespace-pre-wrap">{generatedTests}</pre>
+                  <>
+                    <div className="line-numbers">
+                      {Array.from({ length: generatedTests.split('\n').length }, (_, i) => i + 1).map(lineNumber => (
+                        <span key={lineNumber} className="line-number">
+                          {lineNumber}
+                        </span>
+                      ))}
+                    </div>
+                    <pre className="code-input font-mono text-sm whitespace-pre-wrap text-white p-4">{generatedTests}</pre>
+                  </>
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-gray-400">
                     <TestTube size={48} className="mb-4" />
@@ -270,31 +315,45 @@ Return a structured list of testing steps without any extra text.`
                 )}
               </div>
             </div>
-
-            <button
-              onClick={generateTests}
-              disabled={!contractCode || isGenerating}
-              className={`mt-4 w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 ${
-                isGenerating || !contractCode
-                  ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
-                  : 'bg-emerald-500 hover:bg-emerald-600 text-black hover-gradient-effect'
-              }`}
-            >
-              {isGenerating ? (
-                <>
-                  <CircleNotch className="animate-spin" size={20} />
-                  Generating {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}...
-                </>
-              ) : (
-                <>
-                  <Robot size={20} />
-                  Generate {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .code-container {
+          position: relative;
+          width: 100%;
+          height: 600px; /* Set a fixed height for the container */
+        }
+
+        .line-numbers {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          padding: 4px;
+          text-align: right;
+          color: #6b7280;
+          font-size: 14px;
+          font-family: monospace;
+          white-space: nowrap;
+          overflow-y: auto; /* Add vertical scroll for line numbers */
+          z-index: 1;
+          background-color: #374151;
+          border-right: 1px solid #4b5563;
+        }
+
+        .line-number {
+          display: block;
+          padding: 0 8px;
+        }
+
+        .code-input {
+          padding-left: 50px; /* Adjust based on line number width */
+          z-index: 2;
+          height: 100%;
+          overflow-y:scroll;
+        }
+      `}</style>
     </div>
   );
 }
