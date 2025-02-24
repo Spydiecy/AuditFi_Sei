@@ -270,7 +270,7 @@ export default function AuditPage() {
       <div className="max-w-6xl mx-auto px-4">
         {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-mono font-bold mb-4">Smart Contract Audit</h1>
+          <h1 className="text-3xl font-mono font-bold text-emerald-400 mb-4">Smart Contract Audit</h1>
           <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts on Creator Network</p>
           {error && (
             <motion.div
