@@ -161,7 +161,7 @@ const isSolidityCode = (code: string): boolean => {
     let contractAddress = '';
     if (chainId.toLowerCase() === CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
       contractAddress = CONTRACT_ADDRESSES.creatorChainTestnet;
-      setCurrentChain('lineaSepolia');
+      setCurrentChain('creatorChainTestnet');
     } else {
       throw new Error('Please switch to any supported networks to register audits');
     }
