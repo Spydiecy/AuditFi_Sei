@@ -27,8 +27,8 @@ import Link from 'next/link';
 const CHAIN_CONFIG = {
   creatorChainTestnet: {
     chainId: '0x1994', // Example chain ID
-    chainName: 'Creator Network Testnet',
-    nativeCurrency: { name: 'CRET', symbol: 'CRET', decimals: 18 },
+    chainName: 'Creator Testnet',
+    nativeCurrency: { name: 'CETH', symbol: 'CETH', decimals: 18 },
     rpcUrls: ['https://testnet-rpc.creatorchain.network'],
     blockExplorerUrls: ['https://testnet.creatorchain.network'],
     iconPath: '/chains/creator.png'
@@ -315,7 +315,7 @@ export default function Home() {
               />
               <div>
                 <h3 className="font-semibold">Creator Network Testnet</h3>
-                <p className="text-gray-400 text-sm">Native Token: CRET</p>
+                <p className="text-gray-400 text-sm">Native Token: CETH</p>
               </div>
             </motion.div>
           </div>
