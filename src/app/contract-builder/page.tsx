@@ -1,22 +1,36 @@
-"use client"
+// ContractBuilder.tsx
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Mistral } from "@mistralai/mistralai";
+import { z } from "zod";
 import { ethers } from 'ethers';
-import { 
+import {
   FileCode,
   Robot,
   CircleNotch,
   Copy,
   Check,
   Rocket,
-  Link
+  Link,
+  Code
 } from 'phosphor-react';
 import { CONTRACT_TEMPLATES, ContractTemplate } from './templates';
 import { connectWallet, CHAIN_CONFIG } from '@/utils/web3';
+import React from 'react';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+// Initialize Mistral client
+const mistralClient = new Mistral({
+  apiKey: process.env.NEXT_PUBLIC_MISTRAL_API_KEY!
+});
+
+// Define response schema
+const ContractSchema = z.object({
+  code: z.string(),
+  features: z.array(z.string()),
+  securityNotes: z.array(z.string())
+});
 
 export default function ContractBuilder() {
   // Template and code generation state
@@ -28,13 +42,27 @@ export default function ContractBuilder() {
   const [contractParams, setContractParams] = useState<Record<string, string>>({});
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [copySuccess, setCopySuccess] = useState(false);
-  
+
   // Deployment state
   const [isDeploying, setIsDeploying] = useState(false);
   const [deployedAddress, setDeployedAddress] = useState<string | null>(null);
   const [walletConnected, setWalletConnected] = useState(false);
   const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG | null>(null);
   const [deploymentError, setDeploymentError] = useState<string | null>(null);
+  const [securityNotes, setSecurityNotes] = useState<string[]>([]);
+
+  // State for manual code input in generated code
+  const [manualCode, setManualCode] = useState('');
+
+  // Use manualCode if generatedCode is empty, otherwise use generatedCode
+  const displayedCode = generatedCode || manualCode;
+
+  // Function to handle changes in manual code input
+  const handleManualCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setManualCode(e.target.value);
+    // Clear generatedCode when manually typing
+    setGeneratedCode('');
+  };
 
   // Check for existing wallet connection on mount
   useEffect(() => {
@@ -44,22 +72,18 @@ export default function ContractBuilder() {
           const { provider } = await connectWallet();
           const network = await provider.getNetwork();
           const chainId = '0x' + network.chainId.toString(16);
-          
-          const matchingChain = Object.entries(CHAIN_CONFIG).find(
-            ([_, config]) => config.chainId === chainId
-          );
-          
-          if (matchingChain) {
-            setCurrentChain(matchingChain[0] as keyof typeof CHAIN_CONFIG);
+
+          // Only check for Creator Network
+          if (chainId.toLowerCase() === CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
+            setCurrentChain('creatorChainTestnet');
+            setWalletConnected(true);
           }
-          
-          setWalletConnected(true);
         } catch (error) {
           console.error('Error checking wallet:', error);
         }
       }
     };
-    
+
     checkWallet();
   }, []);
 
@@ -83,53 +107,68 @@ export default function ContractBuilder() {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Generate contract code using Gemini API
+  // Generate contract code using Mistral AI
   const generateContract = async () => {
     if (!selectedTemplate) return;
     setIsGenerating(true);
     setError(null);
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-      const prompt = `You are an expert Solidity developer. Generate a secure and optimized smart contract based on these requirements:
+      const response = await mistralClient.chat.complete({
+        model: "mistral-large-latest",
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert Solidity developer. Generate a secure and optimized smart contract based on these requirements:
 
-      Template: ${selectedTemplate.name}
-      Base Code: ${selectedTemplate.baseCode || 'Create new contract'}
-      Custom Features: ${customFeatures || 'Standard features'}
-      Parameters: ${JSON.stringify(contractParams)}
+        Important Rules:
+        1. Use Solidity version 0.8.19
+        2. DO NOT use ANY external imports or libraries
+        3. Include all necessary functionality directly in the contract
+        4. Add proper access control and safety checks
+        5. Include events for all state changes
+        6. Implement comprehensive security measures
+        7. Add gas optimizations
+        8. Return response in exact JSON format
+        
+        Security Considerations:
+        - Include reentrancy guards where needed
+        - Add proper access control
+        - Implement input validation
+        - Add checks for integer overflow
+        - Validate addresses
+        - Include event emissions
+        - Handle edge cases`
+          },
+          {
+            role: "user",
+            content: `Generate a contract with these specifications:
+        Template: ${selectedTemplate.name}
+        Base Code: ${selectedTemplate.baseCode || 'Create new contract'}
+        Custom Features: ${customFeatures || 'Standard features'}
+        Parameters: ${JSON.stringify(contractParams)}
+        
+        Return in this exact format:
+        {
+          "code": "complete solidity code",
+          "features": ["list of implemented features"],
+          "securityNotes": ["list of security measures implemented"]
+        }`
+          }
+        ],
+        responseFormat: { type: "json_object" },
+        temperature: 0.1,
+        maxTokens: 4096
+      });
 
-      Requirements:
-      1. Use Solidity version 0.8.19
-      2. Include no comments in the code
-      3. No OpenZeppelin imports should be used
-      4. Add proper access control and safety checks
-      5. Include events for all important state changes
-      6. Add gas optimizations
-      7. Must be fully deployable
-      8. Include clear error messages
+      const responseText = response.choices?.[0]?.message?.content || '';
+      const parsedResponse = JSON.parse(typeof responseText === 'string' ? responseText : '');
 
-      ${customFeatures ? `Additional Features to implement:
-      ${customFeatures}` : ''}
+      // Validate response against schema
+      const validatedResponse = ContractSchema.parse(parsedResponse);
 
-      Important:
-      - Keep the core functionality of the base template
-      - Add requested custom features seamlessly
-      - Ensure no OpenZeppelin imports are used
-      - Add proper events for new features
-      - Include input validation
-      - Add clear error messages
-      - Follow security best practices
-
-      Return ONLY the complete contract code without any extra text or markdown.`;
-
-      const result = await model.generateContent(prompt);
-      const cleanCode = result.response.text()
-        .replace(/```solidity\n/g, '')
-        .replace(/```\n/g, '')
-        .replace(/```/g, '')
-        .trim();
-      
-      setGeneratedCode(cleanCode);
+      setGeneratedCode(validatedResponse.code);
+      setSecurityNotes(validatedResponse.securityNotes);
     } catch (error) {
       console.error('Generation failed:', error);
       setError('Failed to generate contract. Please try again.');
@@ -143,141 +182,84 @@ export default function ContractBuilder() {
 
   // Deploy the generated contract
   const deployContract = async () => {
-    if (!generatedCode || !walletConnected) return;
-    
+    if (!displayedCode || !walletConnected) return;
+
     setIsDeploying(true);
     setDeploymentError(null);
-    
+
     try {
-        console.log('Starting deployment process...');
-        const { provider, signer } = await connectWallet();
-        console.log('Wallet connected, preparing to compile contract...');
-        
-        // First, let's log the contract code we're trying to compile
-        console.log('Contract code:', generatedCode);
+      const { provider, signer } = await connectWallet();
 
-        // Compile contract with better error handling
-        let compilationResponse;
-        try {
-            console.log('Sending contract to compiler...');
-            const response = await fetch('/api/compile-contract', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    sourceCode: generatedCode,
-                }),
-            });
+      // Verify we're on Creator Network
+      const network = await provider.getNetwork();
+      const chainId = '0x' + network.chainId.toString(16);
 
-            // Get the raw text response first
-            const responseText = await response.text();
-            console.log('Raw compiler response:', responseText);
+      if (chainId.toLowerCase() !== CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
+        throw new Error('Please switch to Creator Network Testnet');
+      }
 
-            // Try to parse it as JSON
-            try {
-                compilationResponse = JSON.parse(responseText);
-            } catch (parseError) {
-                console.error('Failed to parse compiler response:', parseError);
-                throw new Error(`Invalid compiler response: ${responseText.substring(0, 200)}...`);
+      // Compile contract
+      const response = await fetch('/api/compile-contract', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceCode: displayedCode }),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Compilation failed: ${error}`);
+      }
+
+      const { abi, bytecode } = await response.json();
+
+      // Create contract factory
+      const contractFactory = new ethers.ContractFactory(abi, bytecode, signer);
+
+      // Process constructor arguments
+      const constructorAbi = abi.find((item: any) => item.type === 'constructor');
+      const constructorArgs = Object.values(contractParams).map((value, index) => {
+        const input = constructorAbi?.inputs?.[index];
+
+        if (!input) return value;
+
+        switch (input.type) {
+          case 'uint256':
+            return ethers.parseUnits(value.toString(), 18);
+          case 'address':
+            if (!ethers.isAddress(value)) {
+              throw new Error(`Invalid address for parameter ${input.name}`);
             }
-
-            // Check for compilation errors
-            if (!response.ok) {
-                const errorDetails = compilationResponse.details 
-                    ? (Array.isArray(compilationResponse.details) 
-                        ? compilationResponse.details.join('\n') 
-                        : compilationResponse.details)
-                    : compilationResponse.error || 'Unknown compilation error';
-                throw new Error(`Compilation failed: ${errorDetails}`);
-            }
-
-            // Validate compilation response
-            if (!compilationResponse.abi || !compilationResponse.bytecode) {
-                throw new Error('Compiler response missing ABI or bytecode');
-            }
-
-        } catch (compilationError) {
-            console.error('Contract compilation failed:', compilationError);
-            if (compilationError instanceof Error) {
-              throw new Error(`Contract compilation error: ${compilationError.message}`);
-            } else {
-              throw new Error('Contract compilation error: Unknown error');
-            }
+            return value;
+          default:
+            return value;
         }
+      });
 
-        // Extract ABI and bytecode
-        const { abi, bytecode } = compilationResponse;
-        console.log('Contract compiled successfully');
-        console.log('ABI:', abi);
+      // Deploy contract
+      const contract = await contractFactory.deploy(...constructorArgs);
+      const receipt = await contract.deploymentTransaction()?.wait();
 
-        // Create contract factory
-        console.log('Creating contract factory...');
-        const contractFactory = new ethers.ContractFactory(
-            abi,
-            bytecode,
-            signer
-        );
+      if (!receipt?.contractAddress) {
+        throw new Error('Failed to get contract address');
+      }
 
-        // Process constructor arguments
-        const constructorAbi = abi.find((item: any) => item.type === 'constructor');
-        const constructorArgs = Object.values(contractParams).map((value, index) => {
-            const input = constructorAbi?.inputs?.[index];
-            console.log(`Processing constructor argument ${index}:`, {
-                value,
-                type: input?.type,
-                name: input?.name
-            });
-
-            if (!input) return value;
-
-            switch (input.type) {
-                case 'uint256':
-                    return ethers.parseUnits(value.toString(), 18);
-                case 'address':
-                    if (!ethers.isAddress(value)) {
-                        throw new Error(`Invalid address for parameter ${input.name}`);
-                    }
-                    return value;
-                default:
-                    return value;
-            }
-        });
-
-        console.log('Deploying contract with args:', constructorArgs);
-        const contract = await contractFactory.deploy(...constructorArgs);
-        
-        console.log('Waiting for deployment transaction...');
-        const deploymentTx = contract.deploymentTransaction();
-        if (!deploymentTx) {
-            throw new Error('Deployment transaction failed to create');
-        }
-
-        const deploymentReceipt = await deploymentTx.wait();
-        
-        if (!deploymentReceipt?.contractAddress) {
-            throw new Error('Failed to get contract address from receipt');
-        }
-
-        console.log('Contract deployed successfully:', deploymentReceipt.contractAddress);
-        setDeployedAddress(deploymentReceipt.contractAddress);
+      setDeployedAddress(receipt.contractAddress);
 
     } catch (error: any) {
-        console.error('Deployment failed:', error);
-        setDeploymentError(error.message || 'Unknown deployment error');
+      console.error('Deployment failed:', error);
+      setDeploymentError(error.message || 'Deployment failed');
     } finally {
-        setIsDeploying(false);
+      setIsDeploying(false);
     }
-};
+  };
 
-  // Get block explorer URL for deployed contract
+  // Helper functions
   const getExplorerUrl = () => {
     if (!currentChain || !deployedAddress) return null;
     const baseUrl = CHAIN_CONFIG[currentChain].blockExplorerUrls[0];
     return `${baseUrl}/address/${deployedAddress}`;
   };
 
-  // Handle wallet connection
   const handleConnectWallet = async () => {
     try {
       await connectWallet();
@@ -287,7 +269,6 @@ export default function ContractBuilder() {
     }
   };
 
-  // Copy code to clipboard
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -299,14 +280,11 @@ export default function ContractBuilder() {
   };
 
   return (
-    <div className="min-h-screen py-12 bg-gray-900">
+    <div className="min-h-screen py-12 bg-zinc-900 text-white">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-mono font-bold mb-4 text-white">Smart Contract Builder</h1>
-          <p className="text-gray-400">Generate and deploy secure smart contracts with AI assistance</p>
-          
-          {/* Error Display */}
+          <h1 className="text-3xl font-mono font-bold mb-4 text-emerald-400">Smart Contract Builder</h1>
+          <p className="text-gray-400">Generate and deploy secure smart contracts on Creator Network</p>
           <AnimatePresence>
             {error && (
               <motion.div
@@ -319,8 +297,6 @@ export default function ContractBuilder() {
               </motion.div>
             )}
           </AnimatePresence>
-          
-          {/* Deployment Success Message */}
           {deployedAddress && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
@@ -336,7 +312,7 @@ export default function ContractBuilder() {
                   href={getExplorerUrl() || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-green-400 hover:text-green-300"
+                  className="flex items-center gap-2 text-emerald-400 hover:text-emerald-300"
                 >
                   <Link size={20} />
                   View on Explorer
@@ -346,17 +322,16 @@ export default function ContractBuilder() {
           )}
         </div>
 
-        {/* Main Content Grid */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left Column - Templates and Parameters */}
           <div className="flex flex-col space-y-4">
             {/* Template Selection */}
-            <div className="bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-900/50 rounded-lg border border-gray-800 p-4">
               <div className="flex items-center gap-2 mb-4">
-                <Robot className="text-green-400" size={20} />
+                <Robot className="text-emerald-400" size={20} />
                 <span className="font-mono text-white">Contract Templates</span>
               </div>
-              
+
               <div className="space-y-4">
                 {CONTRACT_TEMPLATES.map((template) => (
                   <button
@@ -364,71 +339,28 @@ export default function ContractBuilder() {
                     onClick={() => setSelectedTemplate(template)}
                     className={`w-full p-4 rounded-lg border transition-colors duration-200 text-left
                       ${selectedTemplate?.name === template.name
-                        ? 'border-green-500 bg-green-500/10'
-                        : 'border-gray-700 hover:border-green-500/50'}`}
+                        ? 'border-emerald-500 bg-emerald-500/10 text-white'
+                        : 'border-gray-800 hover:border-emerald-500/50'
+                      }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="text-green-400">{template.icon}</div>
+                      <div className="text-emerald-400">{template.icon}</div>
                       <span className="font-semibold text-white">{template.name}</span>
                     </div>
-                    <p className="text-sm text-gray-400 mb-2">{template.description}</p>
-                    <div className="flex flex-wrap gap-2">
-                      {template.features.map((feature) => (
-                        <span
-                          key={feature}
-                          className="text-xs px-2 py-1 rounded-full bg-gray-700 text-gray-300"
-                        >
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
+                    <p className="text-xs text-gray-400 mb-2">{template.description}</p>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Parameters Form */}
-            {selectedTemplate && (
-              <div className="bg-gray-800 rounded-lg p-4">
-                <h3 className="font-mono text-white mb-4">Contract Parameters</h3>
-                {Object.entries(contractParams).map(([key, value]) => (
-                  <div key={key} className="mb-4">
-                    <label className="text-sm text-gray-400 mb-1 block">
-                      {key.charAt(0).toUpperCase() + key.slice(1)}
-                    </label>
-                    <input
-                      type="text"
-                      value={value}
-                      onChange={(e) => setContractParams(prev => ({
-                        ...prev,
-                        [key]: e.target.value
-                      }))}
-                      className="w-full bg-gray-700 rounded-lg border border-gray-600 p-2 text-white"
-                    />
-                  </div>
-                ))}
-                <div>
-                  <label className="text-sm text-gray-400 mb-1 block">
-                    Custom Features
-                  </label>
-                  <textarea
-                    value={customFeatures}
-                    onChange={(e) => setCustomFeatures(e.target.value)}
-                    placeholder="Describe additional features..."
-                    className="w-full h-24 bg-gray-700 rounded-lg border border-gray-600 p-2 text-white"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Generate Button */}
+            {/* Generate Button - Moved Here */}
             <button
               onClick={generateContract}
               disabled={!selectedTemplate || isGenerating}
-              className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200 
-                ${isGenerating || !selectedTemplate
-                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                  : 'bg-green-500 hover:bg-green-600 text-black'}`}
+              className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 ${isGenerating || !selectedTemplate
+                ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                : 'bg-emerald-500 hover:bg-emerald-600 text-black'
+                }`}
             >
               {isGenerating ? (
                 <>
@@ -442,69 +374,118 @@ export default function ContractBuilder() {
                 </>
               )}
             </button>
+
+            {/* Parameters Form */}
+            {selectedTemplate && (
+              <div className="bg-gray-900/50 rounded-lg border border-gray-800 p-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <Code className="text-emerald-400" size={20} />
+                  <span className="font-mono text-white">Contract Parameters</span>
+                </div>
+
+                <div className="p-6">
+                  {Object.entries(contractParams).map(([key, value]) => (
+                    <div key={key} className="mb-4">
+                      <label className="text-sm text-gray-400 mb-1 block">
+                        {key.charAt(0).toUpperCase() + key.slice(1)}
+                      </label>
+                      <input
+                        type="text"
+                        value={value}
+                        onChange={(e) =>
+                          setContractParams((prev) => ({
+                            ...prev,
+                            [key]: e.target.value,
+                          }))
+                        }
+                        className="w-full bg-transparent rounded-lg border border-gray-700 p-2 text-white focus:outline-none"
+                      />
+                    </div>
+                  ))}
+                  <div>
+                    <label className="text-sm text-gray-400 mb-1 block">
+                      Custom Features
+                    </label>
+                    <textarea
+                      value={customFeatures}
+                      onChange={(e) => setCustomFeatures(e.target.value)}
+                      placeholder="Describe additional features..."
+                      className="w-full h-24 bg-transparent rounded-lg border border-gray-700 p-2 text-white resize-none focus:outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right Column - Code Display and Deployment */}
-          <div className="bg-gray-800 rounded-lg flex flex-col">
-            {/* Header */}
-            <div className="p-4 border-b border-gray-700 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <FileCode className="text-green-400" size={20} />
-                <span className="font-mono text-white">Generated Contract</span>
-              </div>
-              {generatedCode && (
-                <button
-                  onClick={() => copyToClipboard(generatedCode)}
-                  className="text-green-400 hover:text-green-300 text-sm flex items-center gap-1"
-                >
-                  {copySuccess ? <Check size={16} /> : <Copy size={16} />}
-                  {copySuccess ? 'Copied!' : 'Copy Code'}
-                </button>
-              )}
-            </div>
-
-            {/* Code Display */}
-            <div className="flex-1 overflow-auto p-4">
-              {generatedCode ? (
-                <pre className="font-mono text-sm text-white whitespace-pre-wrap">
-                  {generatedCode}
-                </pre>
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-gray-400">
-                  <Robot size={48} className="mb-4" />
-                  <p>Select a template and generate your contract to see the code here</p>
+          <div className="flex flex-col">
+            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800">
+              <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <FileCode className="text-emerald-400" size={20} />
+                  <span className="font-mono text-white">Generated Contract</span>
                 </div>
-              )}
-            </div>
+                {displayedCode && (
+                  <button
+                    onClick={() => copyToClipboard(displayedCode)}
+                    className="text-emerald-400 hover:text-emerald-300 text-sm flex items-center gap-1"
+                  >
+                    {copySuccess ? <Check size={16} /> : <Copy size={16} />}
+                    {copySuccess ? 'Copied!' : 'Copy Code'}
+                  </button>
+                )}
+              </div>
 
-            {/* Deployment Section */}
-            {generatedCode && (
+              <div className="code-container">
+                {displayedCode ? (
+                  <>
+                    <div className="line-numbers">
+                      {Array.from({ length: displayedCode.split('\n').length }, (_, i) => i + 1).map(lineNumber => (
+                        <span key={lineNumber} className="line-number">
+                          {lineNumber}
+                        </span>
+                      ))}
+                    </div>
+                    <textarea
+                      value={displayedCode}
+                      onChange={handleManualCodeChange}
+                      className="code-input font-mono text-sm text-white bg-transparent border-none resize-none outline-none p-4 w-full h-full absolute top-0 left-0 overflow-y-scroll"
+                    />
+                  </>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-gray-400">
+                    <Robot size={48} className="mb-4" />
+                    <p>Select a template and generate your contract to see the code here</p>
+                  </div>
+                )}
+              </div>
+            </div>
+            {displayedCode && (
               <div className="border-t border-gray-700 p-4">
-                {/* Deployment Controls */}
                 {!walletConnected ? (
                   <button
                     onClick={handleConnectWallet}
-                    className="w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-black transition-colors duration-200"
+                    className="w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-black transition-colors duration-200"
                   >
                     <Robot size={20} />
                     Connect Wallet to Deploy
                   </button>
                 ) : (
                   <div className="space-y-4">
-                    {currentChain && (
-                      <div className="text-sm text-gray-400 flex items-center gap-2">
-                        <span>Connected to:</span>
-                        <span className="text-white font-mono">{CHAIN_CONFIG[currentChain].chainName}</span>
-                      </div>
-                    )}
-                    
+                    <div className="text-sm text-gray-400 flex items-center gap-2">
+                      <span>Network:</span>
+                      <span className="text-white font-mono">Creator Network Testnet</span>
+                    </div>
+
                     <button
                       onClick={deployContract}
                       disabled={isDeploying}
-                      className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200 
-                        ${isDeploying 
-                          ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
-                          : 'bg-green-500 hover:bg-green-600 text-black'}`}
+                      className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200
+                        ${isDeploying
+                          ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                          : 'bg-emerald-500 hover:bg-emerald-600 text-black'
+                        }`}
                     >
                       {isDeploying ? (
                         <>
@@ -518,8 +499,6 @@ export default function ContractBuilder() {
                         </>
                       )}
                     </button>
-
-                    {/* Deployment Error Display */}
                     {deploymentError && (
                       <div className="mt-4 text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                         {deploymentError}
@@ -532,6 +511,41 @@ export default function ContractBuilder() {
           </div>
         </div>
       </div>
+      <style jsx>{`
+        .code-container {
+          position: relative;
+          width: 100%;
+          height: 600px; /* Set a fixed height for the container */
+        }
+
+        .line-numbers {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          padding: 4px;
+          text-align: right;
+          color: #6b7280;
+          font-size: 14px;
+          font-family: monospace;
+          white-space: nowrap;
+          overflow-y: auto; /* Add vertical scroll for line numbers */
+          z-index: 1;
+          background-color: #374151;
+          border-right: 1px solid #4b5563;
+        }
+
+        .line-number {
+          display: block;
+          padding: 0 8px;
+        }
+
+        .code-input {
+          padding-left: 50px; /* Adjust based on line number width */
+          z-index: 2;
+          height: 100%;
+        }
+      `}</style>
     </div>
   );
 }
