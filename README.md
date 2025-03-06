@@ -121,7 +121,6 @@ Exclusively supporting both Electroneum Network Mainnet & Testnet for:
 
 - Join the [Electroneum Network Discord](https://discord.gg/39yKXyJr8F)
 - Follow AuditFi updates on [Twitter](https://x.com/AuditFi_ai)
-- Get help at [t.me/bond_zns](https://t.me/bond_zns)
 
 ## 📄 License
 
