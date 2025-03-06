@@ -67,19 +67,42 @@ export default function ContractBuilder() {
     setGeneratedCode('');
   };
 
+  // Detect current network
+  const detectCurrentNetwork = async () => {
+    try {
+      if (!window.ethereum) return null;
+      
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const network = await provider.getNetwork();
+      const chainId = '0x' + network.chainId.toString(16);
+      
+      // Check which network we're on
+      for (const [key, config] of Object.entries(CHAIN_CONFIG)) {
+        if (chainId.toLowerCase() === config.chainId.toLowerCase()) {
+          setCurrentChain(key as keyof typeof CHAIN_CONFIG);
+          return key as keyof typeof CHAIN_CONFIG;
+        }
+      }
+      
+      setCurrentChain(null);
+      return null;
+    } catch (error) {
+      console.error('Error detecting network:', error);
+      setCurrentChain(null);
+      return null;
+    }
+  };
+
   // Check for existing wallet connection on mount
   useEffect(() => {
     const checkWallet = async () => {
-      if (window.ethereum && (await (window.ethereum.request({ method: 'eth_accounts' }) as Promise<string[]>)).length > 0) {
+      if (window.ethereum) {
         try {
-          const { provider } = await connectWallet();
-          const network = await provider.getNetwork();
-          const chainId = '0x' + network.chainId.toString(16);
-
-          // Only check for Electroneum Network
-          if (chainId.toLowerCase() === CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
-            setCurrentChain('electroneumMainnet');
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' }) as string[];
+          
+          if (accounts && accounts.length > 0) {
             setWalletConnected(true);
+            await detectCurrentNetwork();
           }
         } catch (error) {
           console.error('Error checking wallet:', error);
@@ -88,6 +111,35 @@ export default function ContractBuilder() {
     };
 
     checkWallet();
+  }, []);
+
+  // Listen for account and chain changes
+  useEffect(() => {
+    if (window.ethereum) {
+      const handleAccountsChanged = async (accounts: string[]) => {
+        if (accounts.length === 0) {
+          setWalletConnected(false);
+          setCurrentChain(null);
+        } else {
+          setWalletConnected(true);
+          await detectCurrentNetwork();
+        }
+      };
+
+      const handleChainChanged = async () => {
+        await detectCurrentNetwork();
+      };
+
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+      
+      return () => {
+        if (window.ethereum) {
+          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+          window.ethereum.removeListener('chainChanged', handleChainChanged);
+        }
+      };
+    }
   }, []);
 
   // Update contract parameters when template changes
@@ -191,18 +243,18 @@ export default function ContractBuilder() {
     setDeploymentError(null);
 
     try {
+      // First establish connection and detect chain
       const { provider, signer } = await connectWallet();
-
-      // Verify we're on Electroneum Network
-      const network = await provider.getNetwork();
-      const chainId = '0x' + network.chainId.toString(16);
-
-      if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Electroneum Network Mainnet or Testnet');
-      } else if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumTestnet.chainId.toLowerCase()) {
-        setCurrentChain('Please switch to Electroneum Network Mainnet or Testnet');
+      const detectedChain = await detectCurrentNetwork();
+      
+      // Validate we're on an Electroneum network
+      if (!detectedChain) {
+        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to deploy contracts');
       }
-
+      
+      if (detectedChain !== 'electroneumMainnet' && detectedChain !== 'electroneumTestnet') {
+        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to deploy contracts');
+      }
 
       // Compile contract
       const response = await fetch('/api/compile-contract', {
@@ -212,8 +264,9 @@ export default function ContractBuilder() {
       });
 
       if (!response.ok) {
-        const error = await response.text();
-        throw new Error(`Compilation failed: ${error}`);
+        const errorData = await response.json();
+        const errorDetails = errorData.details || (await response.text());
+        throw new Error(`Compilation failed: ${errorDetails}`);
       }
 
       const { abi, bytecode } = await response.json();
@@ -270,6 +323,7 @@ export default function ContractBuilder() {
     try {
       await connectWallet();
       setWalletConnected(true);
+      await detectCurrentNetwork();
     } catch (error: any) {
       setError(error.message);
     }
@@ -294,6 +348,7 @@ export default function ContractBuilder() {
           </div>
           <h1 className="text-3xl font-mono font-bold mb-4 text-blue-400">Smart Contract Builder</h1>
           <p className="text-gray-400">Generate and deploy secure smart contracts on Electroneum Network</p>
+          
           <AnimatePresence>
             {error && (
               <motion.div
@@ -488,12 +543,30 @@ export default function ContractBuilder() {
                   </button>
                 ) : (
                   <div className="space-y-4">
+                    {/* Network information */}
+                    {currentChain ? (
+                      <div className="text-sm flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-lg px-3 py-2">
+                        <span>Network:</span>
+                        <span className="text-blue-400 font-mono flex items-center gap-1">
+                          <img 
+                            src={CHAIN_CONFIG[currentChain].iconPath}
+                            alt={CHAIN_CONFIG[currentChain].chainName}
+                            className="w-4 h-4 rounded-full"
+                          />
+                          {CHAIN_CONFIG[currentChain].chainName}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-2">
+                        Please connect to Electroneum Network (Mainnet or Testnet) to deploy
+                      </div>
+                    )}
 
                     <button
                       onClick={deployContract}
-                      disabled={isDeploying}
+                      disabled={isDeploying || !currentChain || (currentChain !== 'electroneumMainnet' && currentChain !== 'electroneumTestnet')}
                       className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200
-                        ${isDeploying
+                        ${isDeploying || !currentChain || (currentChain !== 'electroneumMainnet' && currentChain !== 'electroneumTestnet')
                           ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
                           : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20'
                         }`}
