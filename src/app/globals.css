@@ -37,7 +37,7 @@
 
 /* Gradient Effects */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-blue-500 animate-gradient;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400 animate-gradient;
 }
 
 .hover-gradient-effect {
@@ -53,7 +53,7 @@
   inset: 0;
   background: radial-gradient(
     800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
-    rgba(16, 185, 129, 0.1),
+    rgba(59, 130, 246, 0.15),
     transparent 40%
   );
   opacity: 0;
@@ -69,7 +69,7 @@
 /* Scrollbar Styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(16, 185, 129, 0.3) rgba(17, 17, 17, 0.3);
+  scrollbar-color: rgba(59, 130, 246, 0.3) rgba(17, 17, 17, 0.3);
 }
 
 ::-webkit-scrollbar {
@@ -83,19 +83,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(16, 185, 129, 0.3);
+  background-color: rgba(59, 130, 246, 0.3);
   border-radius: 3px;
   transition: background-color 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(16, 185, 129, 0.5);
+  background-color: rgba(59, 130, 246, 0.5);
 }
 
 /* Custom Scrolling Areas */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(16, 185, 129, 0.3) transparent;
+  scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -107,12 +107,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(16, 185, 129, 0.3);
+  background-color: rgba(59, 130, 246, 0.3);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(16, 185, 129, 0.5);
+  background-color: rgba(59, 130, 246, 0.5);
 }
 
 /* Animations */
@@ -131,6 +131,15 @@
   animation: gradient 8s linear infinite;
 }
 
+/* Electric Blue Glow Effects */
+.blue-glow {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.blue-glow-text {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+}
+
 /* Code Editor Styling */
 .code-editor {
   font-family: 'JetBrains Mono', monospace;
@@ -139,4 +148,146 @@
 
 .code-editor::selection {
   @apply bg-primary-500/20;
+}
+
+/* Blue Accents */
+.blue-gradient-bg {
+  background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #60A5FA 100%);
+}
+
+.blue-gradient-border {
+  border-image: linear-gradient(to right, #3B82F6, #06B6D4) 1;
+}
+
+/* Underline animation for navbar links */
+.nav-underline {
+  position: relative;
+}
+
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #60A5FA);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease-in-out;
+}
+
+.nav-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Glowing effect for active links */
+.nav-active {
+  position: relative;
+  color: #3B82F6;
+}
+
+.nav-active::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #60A5FA);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+/* Mobile nav transition effects */
+.mobile-nav-enter {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.mobile-nav-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.mobile-nav-exit {
+  opacity: 1;
+}
+
+.mobile-nav-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* Dropdown animation */
+.dropdown-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.dropdown-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.dropdown-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dropdown-exit-active {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Fancy blur effect for dropdowns and modals */
+.backdrop-blur-fancy {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Glow effect for buttons and interactive elements */
+.blue-glow-hover {
+  transition: all 0.3s ease;
+}
+
+.blue-glow-hover:hover {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+/* Gradient border animation */
+.gradient-border {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #3B82F6, #06B6D4, #3B82F6);
+  background-size: 400% 400%;
+  z-index: -1;
+  border-radius: 0.6rem;
+  animation: gradient-move 3s ease infinite;
+}
+
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
