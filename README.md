@@ -119,7 +119,7 @@ Exclusively supporting both Electroneum Network Mainnet & Testnet for:
 
 ## 📬 Contact & Support
 
-- Join the [Electroneum Network Discord](https://discord.gg/39yKXyJr8F)
+- Join the [Electroneum Network Discord](https://discord.gg/electroneum-999612117521010768)
 - Follow AuditFi updates on [Twitter](https://x.com/AuditFi_ai)
 
 ## 📄 License
