@@ -11,7 +11,7 @@
 
 - **electroneum Network Integration**  
   Fully optimized for electroneum Network's ecosystem:
-  - Direct deployment to electroneum Network Testnet
+  - Direct deployment to Electroneum Network Maintet & Testnet both
   - Network-specific security checks
   - Optimized gas analysis for electroneum Network
   - Instant verification on electroneum Network Explorer
@@ -50,15 +50,8 @@
 ### Prerequisites
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
-- electroneum Network Testnet access
-- CETH tokens for deployment
-
-### Network Configuration
-**electroneum Network Testnet**
-- **RPC URL**: `https://66665.rpc.thirdweb.com`
-- **Chain ID**: Hex: `0x10469`
-- **Explorer**: [electroneum Network Explorer](https://explorer.electroneumchain.io)
-- **Currency**: CETH
+- Electroneum Network Maintet & Testnet both's access
+- ETN tokens for deployment
 
 ## 🔧 Tech Stack
 
@@ -118,7 +111,7 @@ Visit [AuditFi](https://auditfi-electroneum.netlify.app/) to try it out on elect
 
 ## 🔗 Network Integration
 
-Exclusively supporting electroneum Network Testnet for:
+Exclusively supporting Electroneum Network Maintet & Testnet both for:
 - Contract deployment
 - Security analysis
 - Transaction verification

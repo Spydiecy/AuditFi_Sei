@@ -167,7 +167,9 @@ export default function AuditPage() {
       
       // Check if we're on Electroneum Network
       if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Electroneum Network Testnet to register audits');
+        throw new Error('Please switch to Electroneum Network Mainnet or Testnet to register audits');
+      } else if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumTestnet.chainId.toLowerCase()) {
+        throw new Error('Please switch to Electroneum Network Mainnet or Testnet to register audits');
       }
 
       const contract = new ethers.Contract(

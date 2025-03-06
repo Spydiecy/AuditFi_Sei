@@ -55,6 +55,18 @@ export const CHAIN_CONFIG: Record<string, ChainConfig> = {
     rpcUrls: ['https://rpc.ankr.com/electroneum'],
     blockExplorerUrls: ['https://blockexplorer.electroneum.com'],
     iconPath: '/chains/electroneum.png'
+  },
+  electroneumTestnet: {
+    chainId: '0x4F5E0C', // 5201420 in hex
+    chainName: 'Electroneum Testnet',
+    nativeCurrency: {
+      name: 'Electroneum',
+      symbol: 'ETN',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.ankr.com/electroneum_testnet'],
+    blockExplorerUrls: ['https://blockexplorer.thesecurityteam.rocks'],
+    iconPath: '/chains/electroneum.png'
   }
 } as const;
 

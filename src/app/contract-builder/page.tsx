@@ -198,8 +198,11 @@ export default function ContractBuilder() {
       const chainId = '0x' + network.chainId.toString(16);
 
       if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Electroneum Network Testnet');
+        throw new Error('Please switch to Electroneum Network Mainnet or Testnet');
+      } else if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumTestnet.chainId.toLowerCase()) {
+        setCurrentChain('Please switch to Electroneum Network Mainnet or Testnet');
       }
+
 
       // Compile contract
       const response = await fetch('/api/compile-contract', {
@@ -485,10 +488,6 @@ export default function ContractBuilder() {
                   </button>
                 ) : (
                   <div className="space-y-4">
-                    <div className="text-sm text-gray-400 flex items-center gap-2">
-                      <span>Network:</span>
-                      <span className="text-blue-400 font-mono">Electroneum Network Testnet</span>
-                    </div>
 
                     <button
                       onClick={deployContract}

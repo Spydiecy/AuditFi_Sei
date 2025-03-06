@@ -340,7 +340,7 @@ export default function Home() {
                 />
               </div>
               <div>
-                <h3 className="font-semibold text-xl mb-1">Electroneum Network Testnet</h3>
+                <h3 className="font-semibold text-xl mb-1">Electroneum Network Mainnet & Testnet</h3>
                 <p className="text-gray-400">Native Token: <span className="text-blue-400 font-semibold">ETN</span></p>
                 <div className="flex items-center mt-3 space-x-4">
                   <a href="https://blockexplorer.electroneum.com" target="_blank" rel="noopener noreferrer" className="text-sm text-blue-400 hover:text-blue-300 flex items-center space-x-1">
