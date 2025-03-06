@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -23,15 +23,19 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Simplified chain config to only include Creator Network
+// Simplified chain config to only include Electroneum Network
 const CHAIN_CONFIG = {
-  creatorChainTestnet: {
-    chainId: '0x1994', // Example chain ID
-    chainName: 'Creator Testnet',
-    nativeCurrency: { name: 'CETH', symbol: 'CETH', decimals: 18 },
-    rpcUrls: ['https://testnet-rpc.creatorchain.network'],
-    blockExplorerUrls: ['https://testnet.creatorchain.network'],
-    iconPath: '/chains/creator.png'
+  electroneumMainnet: {
+    chainId: '0xCB2E', // 52014 in hex
+    chainName: 'Electroneum Mainnet',
+    nativeCurrency: {
+      name: 'Electroneum',
+      symbol: 'ETN',
+      decimals: 18
+    },
+    rpcUrls: ['https://rpc.ankr.com/electroneum'],
+    blockExplorerUrls: ['https://blockexplorer.electroneum.com'],
+    iconPath: '/chains/electroneum.png'
   }
 };
 
@@ -53,7 +57,7 @@ const features = [
   {
     icon: Lightning,
     title: 'Multi-Chain Support',
-    description: 'Audit smart contracts across multiple blockchain networks'
+    description: 'Audit smart contracts on Electroneum network'
   },
   {
     icon: Code,
@@ -79,7 +83,7 @@ const recentAudits: Audit[] = [
     summary: 'No critical vulnerabilities found. Code follows best practices.',
     auditor: '0xABc...123',
     timestamp: 1703116800,
-    chain: 'creatorChainTestnet'
+    chain: 'electroneumMainnet'
   },
   {
     contractHash: '0x456...def',
@@ -87,7 +91,7 @@ const recentAudits: Audit[] = [
     summary: 'Minor optimizations suggested. Overall secure implementation.',
     auditor: '0xDEf...456',
     timestamp: 1703030400,
-    chain: 'creatorChainTestnet'
+    chain: 'electroneumMainnet'
   },
   {
     contractHash: '0x789...ghi',
@@ -95,7 +99,7 @@ const recentAudits: Audit[] = [
     summary: 'Excellent implementation with robust security measures.',
     auditor: '0xGHi...789',
     timestamp: 1702944000,
-    chain: 'creatorChainTestnet'
+    chain: 'electroneumMainnet'
   }
 ];
 
@@ -173,7 +177,7 @@ export default function Home() {
                 <span className="text-emerald-400">SECURITY</span>
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-xl">
-                Secure your smart contracts with AI-powered analysis, documentation, and on-chain verification. Get instant security audits powered by Finetuned AI, now optimized for Creator Network.
+                Secure your smart contracts with AI-powered analysis, documentation, and on-chain verification. Get instant security audits powered by Finetuned AI, now optimized for Electroneum Network.
               </p>
               <div className="flex gap-4">
                 <Link href="/audit">
@@ -288,7 +292,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Creator Network Section */}
+      {/*  Network Section */}
       <section className="py-20 bg-gray-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -297,8 +301,8 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl font-bold font-mono mb-4">Creator Network Integration</h2>
-            <p className="text-gray-400">Optimized for the Creator Network ecosystem</p>
+            <h2 className="text-3xl font-bold font-mono mb-4">Electroneum Network Integration</h2>
+            <p className="text-gray-400">Optimized for the Electroneum Network ecosystem</p>
           </motion.div>
 
           <div className="max-w-2xl mx-auto">
@@ -307,15 +311,15 @@ export default function Home() {
               className="hover-gradient-effect flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50"
             >
               <Image
-                src="/chains/creator.png"
-                alt="Creator Network"
+                src="/chains/electroneum.png"
+                alt="Electroneum Network"
                 width={40}
                 height={40}
                 className="rounded-full"
               />
               <div>
-                <h3 className="font-semibold">Creator Network Testnet</h3>
-                <p className="text-gray-400 text-sm">Native Token: CETH</p>
+                <h3 className="font-semibold">Electroneum Network Testnet</h3>
+                <p className="text-gray-400 text-sm">Native Token: ETN</p>
               </div>
             </motion.div>
           </div>
@@ -445,7 +449,7 @@ export default function Home() {
               </div>
               <p className="text-gray-400 mb-4">
                 Next-generation smart contract security powered by AI.
-                Get instant audits, documentation generation, and test suites for your Creator Network projects.
+                Get instant audits, documentation generation, and test suites for your Electroneum Network projects.
               </p>
               <div className="flex space-x-4">
                 <a
@@ -465,7 +469,7 @@ export default function Home() {
                   <TelegramLogo size={24} />
                 </a>
                 <a
-                  href="https://github.com/Spydiecy/AuditFi-Creator"
+                  href="https://github.com/Spydiecy/AuditFi_Electroneum"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-emerald-400 transition-colors"
@@ -510,17 +514,17 @@ export default function Home() {
               <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="https://docs.creatorchain.io/general-info/network" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <a href="https://developer.electroneum.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
                     Documentation
                   </a>
                 </li>
                 <li>
-                  <a href="https://discord.gg/39yKXyJr8F" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <a href="https://discord.gg/electroneum-999612117521010768" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
                     Community
                   </a>
                 </li>
                 <li>
-                  <a href="https://t.me/bond_zns" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
+                  <a href="https://t.me/officialelectroneum" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-emerald-400 transition-colors">
                     Support
                   </a>
                 </li>

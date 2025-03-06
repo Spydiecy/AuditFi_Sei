@@ -44,17 +44,17 @@ declare global {
 }
 
 export const CHAIN_CONFIG: Record<string, ChainConfig> = {
-  creatorChainTestnet: {
-    chainId: '0x10469', // 66665 in hex
-    chainName: 'Creator Chain Testnet',
+  electroneumMainnet: {
+    chainId: '0xCB2E', // 52014 in hex
+    chainName: 'Electroneum Mainnet',
     nativeCurrency: {
-      name: 'CETH',
-      symbol: 'CETH',
+      name: 'Electroneum',
+      symbol: 'ETN',
       decimals: 18
     },
-    rpcUrls: ['https://66665.rpc.thirdweb.com'],
-    blockExplorerUrls: ['https://explorer.creatorchain.io'],
-    iconPath: '/chains/creator.png'
+    rpcUrls: ['https://rpc.ankr.com/electroneum'],
+    blockExplorerUrls: ['https://blockexplorer.electroneum.com'],
+    iconPath: '/chains/electroneum.png'
   }
 } as const;
 

@@ -1,20 +1,20 @@
 # AuditFi 🛡️
 
-**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Creator Network.**
+**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for electroneum Network.**
 
 ![image](https://github.com/user-attachments/assets/8cd960b4-a063-4875-917b-559d09303db1)
 
 ## 🌟 Features
 
 - **Advanced AI-Powered Analysis**  
-  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for Creator Network contracts.
+  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for electroneum Network contracts.
 
-- **Creator Network Integration**  
-  Fully optimized for Creator Network's ecosystem:
-  - Direct deployment to Creator Network Testnet
+- **electroneum Network Integration**  
+  Fully optimized for electroneum Network's ecosystem:
+  - Direct deployment to electroneum Network Testnet
   - Network-specific security checks
-  - Optimized gas analysis for Creator Network
-  - Instant verification on Creator Network Explorer
+  - Optimized gas analysis for electroneum Network
+  - Instant verification on electroneum Network Explorer
 
 - **Zero-Dependency Contract Templates**
   - Custom-built ERC20 implementation (no OpenZeppelin)
@@ -27,12 +27,12 @@
 - **Secure Contract Building**
   - Custom base contracts without external dependencies
   - Built-in security best practices
-  - Creator Network-specific optimizations
+  - electroneum Network-specific optimizations
   - Complete event emission for tracking
   - Access control and safety checks
 
 - **On-Chain Verification**  
-  - All audit reports stored on Creator Network
+  - All audit reports stored on electroneum Network
   - Permanent, immutable audit history
   - Direct explorer integration
   - Full transparency and traceability
@@ -50,14 +50,14 @@
 ### Prerequisites
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
-- Creator Network Testnet access
+- electroneum Network Testnet access
 - CETH tokens for deployment
 
 ### Network Configuration
-**Creator Network Testnet**
+**electroneum Network Testnet**
 - **RPC URL**: `https://66665.rpc.thirdweb.com`
 - **Chain ID**: Hex: `0x10469`
-- **Explorer**: [Creator Network Explorer](https://explorer.creatorchain.io)
+- **Explorer**: [electroneum Network Explorer](https://explorer.electroneumchain.io)
 - **Currency**: CETH
 
 ## 🔧 Tech Stack
@@ -72,7 +72,7 @@
 
 | Rating | Description |
 |--------|-------------|
-| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Creator Network |
+| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for electroneum Network |
 | ⭐⭐⭐⭐ | Very Good: No critical issues, minor optimizations needed |
 | ⭐⭐⭐ | Good: No critical but has high severity issues |
 | ⭐⭐ | Poor: Has critical vulnerability or multiple high severity issues |
@@ -80,7 +80,7 @@
 | 0 | Critical: Fundamental security flaws, unsafe for deployment |
 
 ## 🌐 Live Demo
-Visit [AuditFi](https://auditfi-creator.netlify.app/) to try it out on Creator Network!
+Visit [AuditFi](https://auditfi-electroneum.netlify.app/) to try it out on electroneum Network!
 
 ## 🔍 Key Features
 
@@ -97,7 +97,7 @@ Visit [AuditFi](https://auditfi-creator.netlify.app/) to try it out on Creator N
   - Built-in security features
 
 - **Deployment & Verification**
-  - One-click deployment to Creator Network
+  - One-click deployment to electroneum Network
   - Automatic contract verification
   - Transaction monitoring
   - Explorer integration
@@ -111,14 +111,14 @@ Visit [AuditFi](https://auditfi-creator.netlify.app/) to try it out on Creator N
 - Integrated Mistral AI for enhanced analysis
 - Removed OpenZeppelin dependencies for better control
 - Added custom ERC20 and ERC721 implementations
-- Optimized for Creator Network deployment
+- Optimized for electroneum Network deployment
 - Enhanced security validation
 - Improved gas optimization analysis
 - Added real-time security notes display
 
 ## 🔗 Network Integration
 
-Exclusively supporting Creator Network Testnet for:
+Exclusively supporting electroneum Network Testnet for:
 - Contract deployment
 - Security analysis
 - Transaction verification
@@ -128,8 +128,8 @@ Exclusively supporting Creator Network Testnet for:
 
 ## 📬 Contact & Support
 
-- Join the [Creator Network Discord](https://discord.gg/39yKXyJr8F)
-- Follow Creator Network updates on [Twitter](https://x.com/AuditFi_ai)
+- Join the [electroneum Network Discord](https://discord.gg/39yKXyJr8F)
+- Follow electroneum Network updates on [Twitter](https://x.com/AuditFi_ai)
 
 ## 📄 License
 

@@ -73,9 +73,9 @@ export default function ContractBuilder() {
           const network = await provider.getNetwork();
           const chainId = '0x' + network.chainId.toString(16);
 
-          // Only check for Creator Network
-          if (chainId.toLowerCase() === CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
-            setCurrentChain('creatorChainTestnet');
+          // Only check for Electroneum Network
+          if (chainId.toLowerCase() === CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
+            setCurrentChain('electroneumMainnet');
             setWalletConnected(true);
           }
         } catch (error) {
@@ -190,12 +190,12 @@ export default function ContractBuilder() {
     try {
       const { provider, signer } = await connectWallet();
 
-      // Verify we're on Creator Network
+      // Verify we're on Electroneum Network
       const network = await provider.getNetwork();
       const chainId = '0x' + network.chainId.toString(16);
 
-      if (chainId.toLowerCase() !== CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Creator Network Testnet');
+      if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
+        throw new Error('Please switch to Electroneum Network Testnet');
       }
 
       // Compile contract
@@ -284,7 +284,7 @@ export default function ContractBuilder() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-mono font-bold mb-4 text-emerald-400">Smart Contract Builder</h1>
-          <p className="text-gray-400">Generate and deploy secure smart contracts on Creator Network</p>
+          <p className="text-gray-400">Generate and deploy secure smart contracts on Electroneum Network</p>
           <AnimatePresence>
             {error && (
               <motion.div
@@ -475,7 +475,7 @@ export default function ContractBuilder() {
                   <div className="space-y-4">
                     <div className="text-sm text-gray-400 flex items-center gap-2">
                       <span>Network:</span>
-                      <span className="text-white font-mono">Creator Network Testnet</span>
+                      <span className="text-white font-mono">Electroneum Network Testnet</span>
                     </div>
 
                     <button

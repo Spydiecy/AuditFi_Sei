@@ -84,7 +84,7 @@ export default function AuditPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [error, setError] = useState<string | null>(null);
   const [isReviewBlurred, setIsReviewBlurred] = useState(true);
-  const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG>('creatorChainTestnet');
+  const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG>('electroneumMainnet');
   const [txState, setTxState] = useState<TransactionState>({
     isProcessing: false,
     hash: null,
@@ -136,13 +136,13 @@ export default function AuditPage() {
       const network = await provider.getNetwork();
       const chainId = '0x' + network.chainId.toString(16);
       
-      // Check if we're on Creator Network
-      if (chainId.toLowerCase() !== CHAIN_CONFIG.creatorChainTestnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Creator Network Testnet to register audits');
+      // Check if we're on Electroneum Network
+      if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
+        throw new Error('Please switch to Electroneum Network Testnet to register audits');
       }
 
       const contract = new ethers.Contract(
-        CONTRACT_ADDRESSES.creatorChainTestnet,
+        CONTRACT_ADDRESSES.electroneumMainnet,
         AUDIT_REGISTRY_ABI,
         signer
       );
@@ -271,7 +271,7 @@ export default function AuditPage() {
         {/* Header Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-mono font-bold text-emerald-400 mb-4">Smart Contract Audit</h1>
-          <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts on Creator Network</p>
+          <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts on Electroneum Network</p>
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}

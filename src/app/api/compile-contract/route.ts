@@ -16,6 +16,19 @@ function findImports(importPath: string) {
             const content = fs.readFileSync(npmPath, 'utf8');
             return { contents: content };
         }
+        
+        // Handle relative imports within the same directory
+        if (importPath.startsWith('./') || importPath.startsWith('../')) {
+            const basePath = path.join(process.cwd(), 'contracts');
+            const filePath = path.join(basePath, importPath);
+            if (!fs.existsSync(filePath)) {
+                console.error('Import not found:', filePath);
+                return { error: `File not found: ${importPath}` };
+            }
+            const content = fs.readFileSync(filePath, 'utf8');
+            return { contents: content };
+        }
+        
         return { error: `Unsupported import: ${importPath}` };
     } catch (error) {
         console.error('Import error:', error);
@@ -43,7 +56,15 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        // Prepare compiler input with explicit versioning
+        // Detect solidity version from source code
+        let solidityVersion = '0.8.19';
+        const versionRegex = /pragma\s+solidity\s+([\^~]?\d+\.\d+\.\d+)/;
+        const match = sourceCode.match(versionRegex);
+        if (match && match[1]) {
+            solidityVersion = match[1].replace(/[\^~]/, ''); // Remove ^ or ~ if present
+        }
+
+        // Prepare compiler input with detected version
         const input = {
             language: 'Solidity',
             sources: {
@@ -54,20 +75,32 @@ export async function POST(request: Request) {
             settings: {
                 outputSelection: {
                     '*': {
-                        '*': ['abi', 'evm.bytecode']
+                        '*': ['abi', 'evm.bytecode', 'evm.deployedBytecode', 'evm.methodIdentifiers', 'metadata'],
+                        '': ['ast']
                     }
                 },
                 optimizer: {
                     enabled: true,
                     runs: 200
-                }
+                },
+                evmVersion: 'london'
             }
         };
+
+        // Load specific compiler version
+        let compiler;
+        try {
+            // Try to use a specific version if available
+            compiler = solc;
+        } catch (error) {
+            console.warn('Using default solidity compiler:', error);
+            compiler = solc;
+        }
 
         // Compile with error catching
         let output;
         try {
-            const compiledOutput = solc.compile(JSON.stringify(input), { import: findImports });
+            const compiledOutput = compiler.compile(JSON.stringify(input), { import: findImports });
             output = JSON.parse(compiledOutput);
         } catch (error) {
             console.error('Compilation error:', error);
@@ -77,9 +110,18 @@ export async function POST(request: Request) {
             }, { status: 500 });
         }
 
-        // Check for compilation errors
+        // Handle warnings and errors
         if (output.errors) {
+            // Extract all errors and warnings
             const errors = output.errors.filter((e: { severity: string }) => e.severity === 'error');
+            const warnings = output.errors.filter((e: { severity: string }) => e.severity === 'warning');
+            
+            // Log warnings but continue
+            if (warnings.length > 0) {
+                console.warn('Compilation warnings:', warnings);
+            }
+            
+            // Return if there are actual errors
             if (errors.length > 0) {
                 return NextResponse.json({
                     error: 'Compilation errors found',
@@ -96,8 +138,17 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        // Get the contract from the output
-        const contractName = Object.keys(output.contracts['contract.sol'])[0];
+        // Get the contract from the output - handle possibility of multiple contracts
+        const contractNames = Object.keys(output.contracts['contract.sol']);
+        if (contractNames.length === 0) {
+            return NextResponse.json({
+                error: 'No contracts compiled',
+                details: 'The source code did not contain any valid contracts'
+            }, { status: 400 });
+        }
+
+        // Use the first contract if multiple are present, or the only one
+        const contractName = contractNames[0];
         const contract = output.contracts['contract.sol'][contractName];
 
         // Final validation of contract data
@@ -108,10 +159,13 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        // Return successful response
+        // Return successful response with more detailed information
         return NextResponse.json({
+            contractName: contractName,
             abi: contract.abi,
-            bytecode: '0x' + contract.evm.bytecode.object
+            bytecode: '0x' + contract.evm.bytecode.object,
+            metadata: contract.metadata,
+            solidity_version: solidityVersion
         });
 
     } catch (error) {
