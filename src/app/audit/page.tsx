@@ -113,7 +113,7 @@ export default function AuditPage() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [error, setError] = useState<string | null>(null);
   const [isReviewBlurred, setIsReviewBlurred] = useState(true);
-  const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG>('electroneumMainnet');
+  const [currentChain, setCurrentChain] = useState<keyof typeof CHAIN_CONFIG | null>(null);
   const [txState, setTxState] = useState<TransactionState>({
     isProcessing: false,
     hash: null,
@@ -147,6 +147,28 @@ export default function AuditPage() {
     return hasPragma && hasContract;
   };
 
+  // Detect current network
+  const detectCurrentNetwork = async () => {
+    try {
+      const { provider } = await connectWallet();
+      const network = await provider.getNetwork();
+      const chainId = '0x' + network.chainId.toString(16);
+      
+      // Check which network we're on
+      for (const [key, config] of Object.entries(CHAIN_CONFIG)) {
+        if (chainId.toLowerCase() === config.chainId.toLowerCase()) {
+          setCurrentChain(key as keyof typeof CHAIN_CONFIG);
+          return key as keyof typeof CHAIN_CONFIG;
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error detecting network:', error);
+      return null;
+    }
+  };
+
   // Chain registration function
   const registerAuditOnChain = async () => {
     if (!result || !code) return;
@@ -165,15 +187,22 @@ export default function AuditPage() {
       const network = await provider.getNetwork();
       const chainId = '0x' + network.chainId.toString(16);
       
-      // Check if we're on Electroneum Network
-      if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumMainnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Electroneum Network Mainnet or Testnet to register audits');
-      } else if (chainId.toLowerCase() !== CHAIN_CONFIG.electroneumTestnet.chainId.toLowerCase()) {
-        throw new Error('Please switch to Electroneum Network Mainnet or Testnet to register audits');
+      // Check if we're on Electroneum Network (either mainnet or testnet)
+      const detectedChain = await detectCurrentNetwork();
+      
+      if (!detectedChain) {
+        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to register audits');
       }
-
+      
+      if (detectedChain !== 'electroneumMainnet' && detectedChain !== 'electroneumTestnet') {
+        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to register audits');
+      }
+      
+      // Get the proper contract address based on the current network
+      const contractAddress = CONTRACT_ADDRESSES[detectedChain];
+      
       const contract = new ethers.Contract(
-        CONTRACT_ADDRESSES.electroneumMainnet,
+        contractAddress,
         AUDIT_REGISTRY_ABI,
         signer
       );
@@ -288,6 +317,10 @@ export default function AuditPage() {
       setResult(validatedResponse);
       setShowResult(true);
       setCooldown(COOLDOWN_TIME);
+      
+      // Detect the current network when analysis is complete
+      await detectCurrentNetwork();
+      
     } catch (error) {
       console.error('Analysis failed:', error);
       setError('Analysis failed. Please try again in a few moments.');
@@ -295,6 +328,15 @@ export default function AuditPage() {
       setIsAnalyzing(false);
     }
   };
+
+  // Update current chain when the component loads
+  useEffect(() => {
+    const checkChain = async () => {
+      await detectCurrentNetwork();
+    };
+    
+    checkChain();
+  }, []);
 
   return (
     <div className="min-h-screen py-12">
@@ -408,7 +450,7 @@ export default function AuditPage() {
                     <Shield className="text-blue-400" size={20} weight="duotone" />
                     <span className="font-mono">Analysis Results</span>
                   </div>
-                  {txState.hash && (
+                  {txState.hash && currentChain && (
                     <a 
                       href={`${CHAIN_CONFIG[currentChain].blockExplorerUrls[0]}/tx/${txState.hash}`}
                       target="_blank"
@@ -523,6 +565,24 @@ export default function AuditPage() {
                           </>
                         )}
                       </button>
+                      
+                      {/* Network guidance */}
+                      {currentChain && (
+                        <div className="mt-4 text-blue-400 text-sm flex items-center justify-center gap-2">
+                          <img 
+                            src={CHAIN_CONFIG[currentChain].iconPath}
+                            alt={CHAIN_CONFIG[currentChain].chainName}
+                            className="w-4 h-4 rounded-full"
+                          />
+                          Will register on {CHAIN_CONFIG[currentChain].chainName}
+                        </div>
+                      )}
+                      
+                      {!currentChain && (
+                        <div className="mt-4 text-yellow-400 text-sm">
+                          Please connect to Electroneum Network (Mainnet or Testnet)
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
