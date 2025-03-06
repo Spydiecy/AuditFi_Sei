@@ -506,7 +506,7 @@ export default function Home() {
             {/* Logo and social */}
             <div>
               <div className="flex items-center mb-4">
-                <Image src="/logo.png" alt="AuditFi Logo" width={32} height={32} />
+                <Image src="/favicon.ico" alt="AuditFi Logo" width={32} height={32} />
                 <span className="ml-2 text-xl font-bold">AuditFi</span>
               </div>
               <p className="text-gray-400 mb-4">Secure your smart contracts with AI-powered analysis and on-chain verification.</p>
