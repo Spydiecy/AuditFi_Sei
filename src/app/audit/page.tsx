@@ -142,9 +142,19 @@ export default function AuditPage() {
 
   // Validation functions
   const isSolidityCode = (code: string): boolean => {
-    const hasPragma = /pragma\s+solidity\s+[\^]?\d+\.\d+\.\d+/.test(code);
-    const hasContract = /contract\s+\w+/.test(code);
-    return hasPragma && hasContract;
+    // More flexible pragma pattern that accepts different version formats
+    const pragmaPattern = /pragma\s+solidity\s+(?:\^|\>=|\<=|~)?\s*\d+\.\d+(\.\d+)?|pragma\s+solidity\s+[\d\s\^\>\<\=\.\~]+/;
+    const hasPragma = pragmaPattern.test(code);
+    
+    // Check for contract, library, or interface declarations
+    const hasContractLike = /(?:contract|library|interface|abstract\s+contract)\s+\w+/.test(code);
+    
+    // Additional optional checks to identify Solidity code
+    const hasSolidityKeywords = /(?:function|mapping|address|uint\d*|bytes\d*|struct|enum|event|modifier)\s+\w+/.test(code);
+    
+    // We require either pragma statement or contract-like declaration
+    // Plus evidence of Solidity keywords for additional confidence
+    return (hasPragma || hasContractLike) && hasSolidityKeywords;
   };
 
   // Detect current network
