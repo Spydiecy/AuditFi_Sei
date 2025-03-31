@@ -251,44 +251,6 @@ function MainLayout({ children }: RootLayoutProps) {
       <main className="pt-16">
         {children}
       </main>
-
-      {/* Footer */}
-      <footer className="bg-dark-50/30 border-t border-gray-800/50 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <Image 
-                src={Logo}
-                alt="AuditFi Logo"
-                width={24}
-                height={24}
-                className="mr-2"
-              />
-              <span className="text-gray-400 text-sm">
-                © {new Date().getFullYear()} AuditFi. Powered by{' '}
-                <span className="text-white">Linea</span>
-              </span>
-            </div>
-            <div className="flex space-x-6">
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
-                Twitter
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
-                GitHub
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
-                Discord
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-white transition-colors duration-200">
-                Documentation
-              </Link>
-            </div>
-          </div>
-          <div className="mt-4 pt-4 border-t border-gray-800/50 text-center text-gray-500 text-xs">
-            Built with ❤️ for the Linea & MetaMask Hackathon
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
@@ -302,6 +264,18 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <MainLayout>{children}</MainLayout>
           </QueryClientProvider>
         </WagmiProvider>
+        
+        {/* Debug script for MetaMask connection */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+          if (window.ethereum) {
+            console.log('MetaMask is installed!');
+            console.log('Ethereum provider:', window.ethereum);
+          } else {
+            console.log('MetaMask is not installed!');
+          }
+          `
+        }} />
       </body>
     </html>
   );

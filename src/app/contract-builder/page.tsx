@@ -247,13 +247,13 @@ export default function ContractBuilder() {
       const { provider, signer } = await connectWallet();
       const detectedChain = await detectCurrentNetwork();
       
-      // Validate we're on an Electroneum network
+      // Validate we're on an Linea network
       if (!detectedChain) {
-        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to deploy contracts');
+        throw new Error('Please switch to Linea Network (Testnet) to deploy contracts');
       }
-      
-      if (detectedChain !== 'electroneumMainnet' && detectedChain !== 'electroneumTestnet') {
-        throw new Error('Please switch to Electroneum Network (Mainnet or Testnet) to deploy contracts');
+
+      if (detectedChain !== 'lineaSepolia') {
+        throw new Error('Please switch to Linea Network (Testnet) to deploy contracts');
       }
 
       // Compile contract
@@ -343,11 +343,11 @@ export default function ContractBuilder() {
     <div className="min-h-screen py-12 bg-zinc-900 text-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-8">
-          <div className="inline-block mb-3 px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
-            <span className="text-blue-400 text-sm font-semibold">Smart Contract Development</span>
+          <div className="inline-block mb-3 px-4 py-1 rounded-full bg-white/10 border border-white/20">
+            <span className="text-white text-sm font-semibold">Smart Contract Development</span>
           </div>
-          <h1 className="text-3xl font-mono font-bold mb-4 text-blue-400">Smart Contract Builder</h1>
-          <p className="text-gray-400">Generate and deploy secure smart contracts on Electroneum Network</p>
+          <h1 className="text-3xl font-mono font-bold mb-4 text-white">Smart Contract Builder</h1>
+          <p className="text-gray-400">Generate and deploy secure smart contracts on Linea Network</p>
           
           <AnimatePresence>
             {error && (
@@ -365,7 +365,7 @@ export default function ContractBuilder() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-3 rounded-lg"
+              className="mt-4 bg-white-500/10 border border-white-500/20 text-white-400 px-4 py-3 rounded-lg"
             >
               <div className="flex items-center justify-between">
                 <div>
@@ -376,7 +376,7 @@ export default function ContractBuilder() {
                   href={getExplorerUrl() || '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                  className="flex items-center gap-2 text-white-400 hover:text-white-300 transition-colors duration-200"
                 >
                   <Link size={20} weight="bold" />
                   View on Explorer
@@ -390,9 +390,9 @@ export default function ContractBuilder() {
           {/* Left Column - Templates and Parameters */}
           <div className="flex flex-col space-y-4">
             {/* Template Selection */}
-            <div className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-blue-500/30 transition-colors duration-300 shadow-lg p-4">
+            <div className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-white-500/30 transition-colors duration-300 shadow-lg p-4">
               <div className="flex items-center gap-2 mb-4">
-                <Robot className="text-blue-400" size={20} weight="duotone" />
+                <Robot className="text-white-400" size={20} weight="duotone" />
                 <span className="font-mono text-white">Contract Templates</span>
               </div>
 
@@ -403,12 +403,12 @@ export default function ContractBuilder() {
                     onClick={() => setSelectedTemplate(template)}
                     className={`w-full p-4 rounded-lg border transition-all duration-200 text-left hover:shadow-md
                       ${selectedTemplate?.name === template.name
-                        ? 'border-blue-500 bg-blue-500/10 text-white shadow-blue-500/5'
-                        : 'border-gray-800 hover:border-blue-500/50'
+                        ? 'border-white bg-white/10 text-white shadow-white/5'
+                        : 'border-gray-800 hover:border-white/50'
                       }`}
                   >
                     <div className="flex items-center gap-2 mb-2">
-                      <div className={`${selectedTemplate?.name === template.name ? 'text-blue-400' : 'text-gray-400'}`}>
+                      <div className={`${selectedTemplate?.name === template.name ? 'text-white' : 'text-gray-400'}`}>
                         {template.icon}
                       </div>
                       <span className="font-semibold text-white">{template.name}</span>
@@ -425,7 +425,7 @@ export default function ContractBuilder() {
               disabled={!selectedTemplate || isGenerating}
               className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 ${isGenerating || !selectedTemplate
                 ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                : 'bg-dark-100 hover:bg-dark-200 text-white shadow-lg shadow-white/20'
                 }`}
             >
               {isGenerating ? (
@@ -443,9 +443,9 @@ export default function ContractBuilder() {
 
             {/* Parameters Form */}
             {selectedTemplate && (
-              <div className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-blue-500/30 transition-colors duration-300 shadow-lg p-4">
+              <div className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-white-500/30 transition-colors duration-300 shadow-lg p-4">
                 <div className="flex items-center gap-2 mb-4">
-                  <Code className="text-blue-400" size={20} weight="duotone" />
+                  <Code className="text-white" size={20} weight="duotone" />
                   <span className="font-mono text-white">Contract Parameters</span>
                 </div>
 
@@ -464,7 +464,7 @@ export default function ContractBuilder() {
                             [key]: e.target.value,
                           }))
                         }
-                        className="w-full bg-transparent rounded-lg border border-gray-700 p-2 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all duration-200"
+                        className="w-full bg-transparent rounded-lg border border-gray-700 p-2 text-white focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all duration-200"
                       />
                     </div>
                   ))}
@@ -476,7 +476,7 @@ export default function ContractBuilder() {
                       value={customFeatures}
                       onChange={(e) => setCustomFeatures(e.target.value)}
                       placeholder="Describe additional features..."
-                      className="w-full h-24 bg-transparent rounded-lg border border-gray-700 p-2 text-white resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all duration-200"
+                      className="w-full h-24 bg-transparent rounded-lg border border-gray-700 p-2 text-white resize-none focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all duration-200"
                     />
                   </div>
                 </div>
@@ -486,16 +486,16 @@ export default function ContractBuilder() {
 
           {/* Right Column - Code Display and Deployment */}
           <div className="flex flex-col">
-            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-blue-500/30 transition-colors duration-300 shadow-lg">
+            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-white-500/30 transition-colors duration-300 shadow-lg">
               <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <FileCode className="text-blue-400" size={20} weight="duotone" />
+                  <FileCode className="text-white" size={20} weight="duotone" />
                   <span className="font-mono text-white">Generated Contract</span>
                 </div>
                 {displayedCode && (
                   <button
                     onClick={() => copyToClipboard(displayedCode)}
-                    className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-blue-500/10"
+                    className="text-white hover:text-gray-300 text-sm flex items-center gap-1 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-white/10"
                   >
                     {copySuccess ? <Check size={16} weight="bold" /> : <Copy size={16} weight="bold" />}
                     {copySuccess ? 'Copied!' : 'Copy Code'}
@@ -522,8 +522,8 @@ export default function ContractBuilder() {
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-gray-400">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-md"></div>
-                      <Robot size={48} className="mb-4 relative z-10 text-blue-400" weight="duotone" />
+                      <div className="absolute inset-0 bg-white/10 rounded-full blur-md"></div>
+                      <Robot size={48} className="mb-4 relative z-10 text-white" weight="duotone" />
                     </div>
                     <p>Select a template and generate your contract to see the code here</p>
                   </div>
@@ -536,7 +536,7 @@ export default function ContractBuilder() {
                 {!walletConnected ? (
                   <button
                     onClick={handleConnectWallet}
-                    className="w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-200 shadow-lg shadow-blue-500/20"
+                    className="w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 bg-dark-100 hover:bg-dark-200 text-white transition-colors duration-200 shadow-lg shadow-white/20"
                   >
                     <Lightning size={20} weight="fill" />
                     Connect Wallet to Deploy
@@ -545,9 +545,9 @@ export default function ContractBuilder() {
                   <div className="space-y-4">
                     {/* Network information */}
                     {currentChain ? (
-                      <div className="text-sm flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-lg px-3 py-2">
+                      <div className="text-sm flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-3 py-2">
                         <span>Network:</span>
-                        <span className="text-blue-400 font-mono flex items-center gap-1">
+                        <span className="text-white font-mono flex items-center gap-1">
                           <img 
                             src={CHAIN_CONFIG[currentChain].iconPath}
                             alt={CHAIN_CONFIG[currentChain].chainName}
@@ -558,17 +558,17 @@ export default function ContractBuilder() {
                       </div>
                     ) : (
                       <div className="text-sm text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-2">
-                        Please connect to Electroneum Network (Mainnet or Testnet) to deploy
+                        Please connect to Linea Network (Testnet) to deploy
                       </div>
                     )}
 
                     <button
                       onClick={deployContract}
-                      disabled={isDeploying || !currentChain || (currentChain !== 'electroneumMainnet' && currentChain !== 'electroneumTestnet')}
+                      disabled={isDeploying || !currentChain || (currentChain !== 'lineaSepolia')}
                       className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200
-                        ${isDeploying || !currentChain || (currentChain !== 'electroneumMainnet' && currentChain !== 'electroneumTestnet')
+                        ${isDeploying || !currentChain || (currentChain !== 'lineaSepolia')
                           ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
-                          : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                          : 'bg-dark-100 hover:bg-dark-200 text-white shadow-lg shadow-white/20'
                         }`}
                     >
                       {isDeploying ? (
@@ -591,15 +591,15 @@ export default function ContractBuilder() {
                     )}
                     
                     {securityNotes.length > 0 && (
-                      <div className="mt-4 bg-blue-500/5 border border-blue-500/20 rounded-lg p-3">
+                      <div className="mt-4 bg-white/5 border border-white/20 rounded-lg p-3">
                         <div className="flex items-center gap-2 mb-2">
-                          <Shield className="text-blue-400" size={16} weight="fill" />
-                          <h3 className="text-sm font-semibold text-blue-400">Security Notes</h3>
+                          <Shield className="text-white" size={16} weight="fill" />
+                          <h3 className="text-sm font-semibold text-white">Security Notes</h3>
                         </div>
                         <ul className="text-xs text-gray-300 space-y-1">
                           {securityNotes.map((note, index) => (
                             <li key={index} className="flex items-start gap-2">
-                              <ArrowRight className="text-blue-400 mt-0.5 flex-shrink-0" size={12} />
+                              <ArrowRight className="text-white mt-0.5 flex-shrink-0" size={12} />
                               <span>{note}</span>
                             </li>
                           ))}
@@ -647,7 +647,7 @@ export default function ContractBuilder() {
           z-index: 2;
           height: 100%;
           scrollbar-width: thin;
-          scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+          scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
         }
 
         .code-input::-webkit-scrollbar {
@@ -659,12 +659,12 @@ export default function ContractBuilder() {
         }
 
         .code-input::-webkit-scrollbar-thumb {
-          background-color: rgba(59, 130, 246, 0.3);
+          background-color: rgba(255, 255, 255, 0.3);
           border-radius: 3px;
         }
 
         .code-input::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(59, 130, 246, 0.5);
+          background-color: rgba(255, 255, 255, 0.5);
         }
       `}</style>
     </div>

@@ -3,6 +3,10 @@ import { http, createConfig } from "wagmi";
 import { lineaSepolia } from "wagmi/chains";
 import { metaMask } from "wagmi/connectors";
 
+// Debug the MetaMask connector
+const connector = metaMask();
+console.log("MetaMask connector created:", connector);
+
 // Create custom chain definition with proper RPC URL
 const customLineaSepolia = {
   ...lineaSepolia,
@@ -24,8 +28,12 @@ export const queryClient = new QueryClient();
 export const wagmiConfig = createConfig({
   ssr: true,
   chains: [customLineaSepolia],
-  connectors: [metaMask()],
+  connectors: [connector],
   transports: {
     [customLineaSepolia.id]: http(),
   },
-}); 
+});
+
+// Debug the created config
+console.log("Wagmi config created with chains:", wagmiConfig.chains);
+console.log("Wagmi config connectors:", wagmiConfig.connectors); 

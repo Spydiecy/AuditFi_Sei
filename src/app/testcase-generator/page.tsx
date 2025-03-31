@@ -193,10 +193,10 @@ Return a structured list of testing steps without any extra text.`
     <div className="min-h-screen py-12 bg-zinc-900 text-white">
       <div className="max-w-6xl mx-auto px-4">
         <div className="mb-8">
-          <div className="inline-block mb-3 px-4 py-1 rounded-full bg-blue-500/10 border border-blue-500/20">
-            <span className="text-blue-400 text-sm font-semibold">Test Suite Generation</span>
+          <div className="inline-block mb-3 px-4 py-1 rounded-full bg-white/10 border border-white/20">
+            <span className="text-white text-sm font-semibold">Test Suite Generation</span>
           </div>
-          <h1 className="text-3xl font-mono font-bold mb-4 text-blue-400">Test Case Generator</h1>
+          <h1 className="text-3xl font-mono font-bold mb-4 text-white">Test Case Generator</h1>
           <p className="text-gray-400">Generate comprehensive test cases for your smart contracts using different testing frameworks</p>
           <AnimatePresence>
             {error && (
@@ -221,12 +221,12 @@ Return a structured list of testing steps without any extra text.`
                   onClick={() => setSelectedFramework(option.id)}
                   className={`p-4 rounded-lg border transition-all duration-200 text-left h-full hover:shadow-md
                     ${selectedFramework === option.id
-                      ? 'border-blue-500 bg-blue-500/10 text-white shadow-blue-500/5'
-                      : 'border-gray-800 hover:border-blue-500/50'
+                      ? 'border-white bg-white/10 text-white shadow-white/5'
+                      : 'border-gray-800 hover:border-white/50'
                     }`}
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <div className={`${selectedFramework === option.id ? 'text-blue-400' : 'text-gray-400'}`}>
+                    <div className={`${selectedFramework === option.id ? 'text-white' : 'text-gray-400'}`}>
                       {option.icon}
                     </div>
                     <span className="font-semibold text-white">{option.name}</span>
@@ -237,10 +237,10 @@ Return a structured list of testing steps without any extra text.`
             </div>
 
             <div
-              className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-blue-500/30 transition-colors duration-300 shadow-lg"
+              className="bg-gray-900/50 rounded-lg border border-gray-800 hover:border-white/30 transition-colors duration-300 shadow-lg"
             >
               <div className="p-4 border-b border-gray-800 flex items-center gap-2">
-                <Code className="text-blue-400" size={20} weight="duotone" />
+                <Code className="text-white" size={20} weight="duotone" />
                 <span className="font-mono text-white">Contract Code</span>
               </div>
 
@@ -248,7 +248,7 @@ Return a structured list of testing steps without any extra text.`
                 value={contractCode}
                 onChange={(e) => setContractCode(e.target.value)}
                 placeholder="Paste your smart contract code here..."
-                className="w-full h-[400px] bg-transparent p-6 font-mono text-sm resize-none focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/50 transition-all duration-200 text-white"
+                className="w-full h-[400px] bg-transparent p-6 font-mono text-sm resize-none focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all duration-200 text-white"
               />
             </div>
             
@@ -257,7 +257,7 @@ Return a structured list of testing steps without any extra text.`
               disabled={!contractCode || isGenerating}
               className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200 ${isGenerating || !contractCode
                 ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/20'
+                : 'bg-dark-100 hover:bg-dark-200 text-white shadow-lg shadow-white/20'
                 }`}
             >
               {isGenerating ? (
@@ -275,16 +275,16 @@ Return a structured list of testing steps without any extra text.`
           </div>
 
           <div className="flex flex-col">
-            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-blue-500/30 transition-colors duration-300 shadow-lg">
+            <div className="flex-1 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-white/30 transition-colors duration-300 shadow-lg">
               <div className="p-4 border-b border-gray-800 flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <TestTube className="text-blue-400" size={20} weight="duotone" />
+                  <TestTube className="text-white" size={20} weight="duotone" />
                   <span className="font-mono text-white">Generated {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.name}</span>
                 </div>
                 {generatedTests && (
                   <button
                     onClick={() => copyToClipboard(generatedTests)}
-                    className="text-blue-400 hover:text-blue-300 text-sm flex items-center gap-1 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-blue-500/10"
+                    className="text-white hover:text-gray-300 text-sm flex items-center gap-1 transition-colors duration-200 px-2 py-1 rounded-md hover:bg-white/10"
                   >
                     {copySuccess ? <Check size={16} weight="bold" /> : <Copy size={16} weight="bold" />}
                     {copySuccess ? 'Copied!' : 'Copy Code'}
@@ -307,15 +307,15 @@ Return a structured list of testing steps without any extra text.`
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-gray-400">
                     <div className="relative">
-                      <div className="absolute inset-0 bg-blue-500/10 rounded-full blur-md"></div>
-                      <TestTube size={48} className="mb-4 relative z-10 text-blue-400" weight="duotone" />
+                      <div className="absolute inset-0 bg-white/10 rounded-full blur-md"></div>
+                      <TestTube size={48} className="mb-4 relative z-10 text-white" weight="duotone" />
                     </div>
                     <p>Select a framework, enter your contract code, and generate tests</p>
                     <div className="mt-4 flex flex-wrap gap-2 justify-center">
                       {TESTING_OPTIONS.find(opt => opt.id === selectedFramework)?.features.map((feature) => (
                         <span
                           key={feature}
-                          className="text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-300 border border-blue-500/20"
+                          className="text-xs px-2 py-1 rounded-full bg-white/10 text-gray-300 border border-white/20"
                         >
                           {feature}
                         </span>
@@ -363,7 +363,7 @@ Return a structured list of testing steps without any extra text.`
           height: 100%;
           overflow-y: scroll;
           scrollbar-width: thin;
-          scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+          scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
         }
 
         .code-input::-webkit-scrollbar {
@@ -375,12 +375,12 @@ Return a structured list of testing steps without any extra text.`
         }
 
         .code-input::-webkit-scrollbar-thumb {
-          background-color: rgba(59, 130, 246, 0.3);
+          background-color: rgba(255, 255, 255, 0.3);
           border-radius: 3px;
         }
 
         .code-input::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(59, 130, 246, 0.5);
+          background-color: rgba(255, 255, 255, 0.5);
         }
       `}</style>
     </div>
