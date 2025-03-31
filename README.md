@@ -1,13 +1,13 @@
 # AuditFi 🛡️
 
-**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Linea Network.**
+**Next-generation smart contract security powered by Finetuned AI, delivering instant, on-chain audit reports for Linea Network.**
 
 ![image](https://github.com/user-attachments/assets/0ea2adad-3a31-4c22-a93c-f2cfe42f71d8)
 
 ## 🌟 Features
 
 - **Advanced AI-Powered Analysis**  
-  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for Linea Network contracts.
+  Leveraging finetuned large language model for comprehensive smart contract security analysis, customized specifically for Linea Network contracts.
 
 - **Complete Linea Network Integration**  
   Fully optimized for Linea Network's ecosystem:
