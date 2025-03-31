@@ -10,34 +10,34 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3B82F6', // Blue-500
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
+          DEFAULT: '#FFFFFF', // White
+          50: '#FFFFFF',
+          100: '#F9F9F9',
+          200: '#F0F0F0',
+          300: '#E4E4E4',
+          400: '#D1D1D1',
+          500: '#BDBDBD',
+          600: '#9E9E9E',
+          700: '#757575',
+          800: '#616161',
+          900: '#424242',
         },
-        // Secondary cyan colors for accents
+        // Secondary color as a darker gray
         secondary: {
-          DEFAULT: '#06B6D4', // Cyan-500
-          50: '#ECFEFF',
-          100: '#CFFAFE',
-          200: '#A5F3FC',
-          300: '#67E8F9',
-          400: '#22D3EE',
-          500: '#06B6D4',
-          600: '#0891B2',
-          700: '#0E7490',
-          800: '#155E75',
-          900: '#164E63',
+          DEFAULT: '#9E9E9E', // Gray
+          50: '#FAFAFA',
+          100: '#F5F5F5',
+          200: '#EEEEEE',
+          300: '#E0E0E0',
+          400: '#BDBDBD',
+          500: '#9E9E9E',
+          600: '#757575',
+          700: '#616161',
+          800: '#424242',
+          900: '#212121',
         },
         dark: {
-          DEFAULT: '#0A0A0A',
+          DEFAULT: '#000000', // Black
           50: '#1A1A1A',
           100: '#2A2A2A',
           200: '#3A3A3A',

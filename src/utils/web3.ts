@@ -36,37 +36,25 @@ interface ChainConfig {
   iconPath: string;
 }
 
-// Extend Window interface properly
-declare global {
+// Comment out Window interface extension to avoid type conflicts
+/* declare global {
   interface Window {
     ethereum?: EthereumProvider;
   }
-}
+} */
 
 export const CHAIN_CONFIG: Record<string, ChainConfig> = {
-  electroneumMainnet: {
-    chainId: '0xCB2E', // 52014 in hex
-    chainName: 'Electroneum Mainnet',
+  lineaSepolia: {
+    chainId: '0xe705', // 59141 in hex
+    chainName: 'Linea Sepolia',
     nativeCurrency: {
-      name: 'Electroneum',
-      symbol: 'ETN',
+      name: 'Ethereum',
+      symbol: 'ETH',
       decimals: 18
     },
-    rpcUrls: ['https://rpc.ankr.com/electroneum'],
-    blockExplorerUrls: ['https://blockexplorer.electroneum.com'],
-    iconPath: '/chains/electroneum.png'
-  },
-  electroneumTestnet: {
-    chainId: '0x4F5E0C', // 5201420 in hex
-    chainName: 'Electroneum Testnet',
-    nativeCurrency: {
-      name: 'Electroneum',
-      symbol: 'ETN',
-      decimals: 18
-    },
-    rpcUrls: ['https://rpc.ankr.com/electroneum_testnet'],
-    blockExplorerUrls: ['https://blockexplorer.thesecurityteam.rocks'],
-    iconPath: '/chains/electroneum.png'
+    rpcUrls: ['https://rpc.sepolia.linea.build'],
+    blockExplorerUrls: ['https://sepolia.lineascan.build'],
+    iconPath: '/chains/linea.png'
   }
 } as const;
 
@@ -87,7 +75,7 @@ export const connectWallet = async (): Promise<WalletConnection> => {
   }
 
   try {
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const provider = new ethers.BrowserProvider(window.ethereum as any);
     await provider.send('eth_requestAccounts', []);
     const signer = await provider.getSigner();
     const address = await signer.getAddress();
@@ -104,9 +92,10 @@ export const switchNetwork = async (chainKey: ChainKey): Promise<void> => {
   }
 
   const chain = CHAIN_CONFIG[chainKey];
+  const ethereum = window.ethereum as EthereumProvider;
   
   try {
-    await window.ethereum.request({
+    await ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: chain.chainId }],
     });
@@ -115,7 +104,7 @@ export const switchNetwork = async (chainKey: ChainKey): Promise<void> => {
     // This error code means the chain has not been added to MetaMask
     if (switchError.code === 4902) {
       try {
-        await window.ethereum.request({
+        await ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [{
             chainId: chain.chainId,

@@ -23,7 +23,7 @@
   }
   
   .button-primary {
-    @apply px-4 py-2 bg-primary hover:bg-primary-600 text-white rounded-lg transition-colors duration-200;
+    @apply px-4 py-2 bg-dark-100 hover:bg-dark-200 text-white font-medium rounded-lg transition-colors duration-200;
   }
   
   .button-secondary {
@@ -31,13 +31,13 @@
   }
   
   .input-primary {
-    @apply px-4 py-2 bg-dark-50 border border-dark-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply px-4 py-2 bg-dark-50 border border-dark-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent;
   }
 }
 
 /* Gradient Effects */
 .gradient-text {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-400 to-secondary-400 animate-gradient;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400 animate-gradient;
 }
 
 .hover-gradient-effect {
@@ -53,7 +53,7 @@
   inset: 0;
   background: radial-gradient(
     800px circle at var(--mouse-x, 0) var(--mouse-y, 0),
-    rgba(59, 130, 246, 0.15),
+    rgba(255, 255, 255, 0.15),
     transparent 40%
   );
   opacity: 0;
@@ -69,7 +69,7 @@
 /* Scrollbar Styling */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.3) rgba(17, 17, 17, 0.3);
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(17, 17, 17, 0.3);
 }
 
 ::-webkit-scrollbar {
@@ -83,19 +83,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
   transition: background-color 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(59, 130, 246, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Custom Scrolling Areas */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -107,12 +107,12 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(59, 130, 246, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Animations */
@@ -131,13 +131,13 @@
   animation: gradient 8s linear infinite;
 }
 
-/* Electric Blue Glow Effects */
-.blue-glow {
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+/* White Glow Effects */
+.white-glow {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
 }
 
-.blue-glow-text {
-  text-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+.white-glow-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
 /* Code Editor Styling */
@@ -147,16 +147,16 @@
 }
 
 .code-editor::selection {
-  @apply bg-primary-500/20;
+  @apply bg-white/20;
 }
 
-/* Blue Accents */
-.blue-gradient-bg {
-  background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 50%, #60A5FA 100%);
+/* White Accents */
+.white-gradient-bg {
+  background: linear-gradient(135deg, #424242 0%, #FFFFFF 50%, #E4E4E4 100%);
 }
 
-.blue-gradient-border {
-  border-image: linear-gradient(to right, #3B82F6, #06B6D4) 1;
+.white-gradient-border {
+  border-image: linear-gradient(to right, #FFFFFF, #BDBDBD) 1;
 }
 
 /* Underline animation for navbar links */
@@ -171,7 +171,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #3B82F6, #60A5FA);
+  background: linear-gradient(90deg, #FFFFFF, #E4E4E4);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.3s ease-in-out;
@@ -185,7 +185,7 @@
 /* Glowing effect for active links */
 .nav-active {
   position: relative;
-  color: #3B82F6;
+  color: #FFFFFF;
 }
 
 .nav-active::before {
@@ -195,8 +195,8 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #3B82F6, #60A5FA);
-  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+  background: linear-gradient(90deg, #FFFFFF, #E4E4E4);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
 
 /* Mobile nav transition effects */
@@ -250,16 +250,23 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Glow effect for buttons and interactive elements */
+/* Replace blue-glow with white-glow */
+.blue-glow {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.blue-glow-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
 .blue-glow-hover {
-  transition: all 0.3s ease;
+  transition: box-shadow 0.3s ease;
 }
 
 .blue-glow-hover:hover {
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
 }
 
-/* Gradient border animation */
 .gradient-border {
   position: relative;
   border-radius: 0.5rem;
@@ -269,15 +276,16 @@
 .gradient-border::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #3B82F6, #06B6D4, #3B82F6);
-  background-size: 400% 400%;
-  z-index: -1;
-  border-radius: 0.6rem;
-  animation: gradient-move 3s ease infinite;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: linear-gradient(to right, #FFFFFF, #BDBDBD);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 @keyframes gradient-move {
