@@ -2,7 +2,7 @@
 
 **Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Linea Network.**
 
-![AuditFi Dashboard](https://github.com/user-attachments/assets/f35a7bc8-3a5a-43a3-a931-1cae9facf9bf)
+![image](https://github.com/user-attachments/assets/0ea2adad-3a31-4c22-a93c-f2cfe42f71d8)
 
 ## 🌟 Features
 
@@ -16,7 +16,7 @@
   - Specialized gas optimization for Linea environment
   - Instant verification on Linea Network Explorer
   
-  ![Linea Network Support](https://github.com/user-attachments/assets/e14ab2ae-90b1-43aa-ab08-c931eb42045d)
+  ![image](https://github.com/user-attachments/assets/127d5dab-3395-4fa9-9ca5-c6dddcd0b3d8)
 
 - **Self-Contained Smart Contract Templates**
   - Dependency-free ERC20 implementation
@@ -24,7 +24,7 @@
   - AI-assisted contract generation with custom specifications
   - Robust security features built into every template
   - Linea Network gas optimizations
-  - ![Screenshot 2025-03-06 202229](https://github.com/user-attachments/assets/9208b0bb-8b01-46ce-9227-6042d38ddde6)
+  - ![image](https://github.com/user-attachments/assets/2188c03d-e7fc-4315-8dea-3b630fe65bd0)
 
 - **Secure Contract Building**
   - Zero-dependency contract architecture
@@ -38,8 +38,8 @@
   - Immutable audit history for complete traceability
   - Direct explorer integration for transparency
   - Verifiable security scores
-  - ![image](https://github.com/user-attachments/assets/a38973b8-3ff5-4f19-aa07-a03671303f3b)
-  - ![image](https://github.com/user-attachments/assets/0fa36ed0-8ee6-43ab-b8e6-28b4a9dfcfef)
+  - ![image](https://github.com/user-attachments/assets/69735782-35f8-4a18-9706-22ada9a5f599)
+  - ![image](https://github.com/user-attachments/assets/f651f308-a028-48e4-b687-67579eb8186f)
 
 - **Interactive Development Experience**
   - Real-time code generation and validation
@@ -101,9 +101,9 @@ Visit [AuditFi](https://auditfi-linea.netlify.app/) to try it out on Linea Netwo
   - Automatically generated smart contract documentation
   - AI-powered test case creation for multiple frameworks
 
-![image](https://github.com/user-attachments/assets/55b934a4-7fd5-42ff-ad19-a2430e508a90)
+![image](https://github.com/user-attachments/assets/cd1549ce-4e06-4a51-b20f-c56bf0af32aa)
 
-![image](https://github.com/user-attachments/assets/252eecc8-9bec-4b20-95cc-4125ae6f41ae)
+![image](https://github.com/user-attachments/assets/275f8c22-64eb-4776-a6ad-f537ca3b4e03)
 
 ## 🔗 Network Support
 
@@ -115,11 +115,10 @@ Exclusively supporting Linea Sepolia Testnet for:
 - Network-specific gas optimization
 - Linea-focused security patterns
 
-![image](https://github.com/user-attachments/assets/cb47e089-9035-483f-a6e8-ac3cdd125b24)
+![image](https://github.com/user-attachments/assets/8d7a929e-4559-4ed9-a2bc-9f2abedea0c4)
 
 ## 📬 Contact & Support
 
-- Join the [Linea Network Discord](https://discord.gg/linea)
 - Follow AuditFi updates on [Twitter](https://x.com/AuditFi_ai)
 
 ## 📄 License
