@@ -1,29 +1,29 @@
 # AuditFi 🛡️
 
-**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Electroneum Network.**
+**Next-generation smart contract security powered by Mistral AI, delivering instant, on-chain audit reports for Linea Network.**
 
 ![AuditFi Dashboard](https://github.com/user-attachments/assets/f35a7bc8-3a5a-43a3-a931-1cae9facf9bf)
 
 ## 🌟 Features
 
 - **Advanced AI-Powered Analysis**  
-  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for Electroneum Network contracts.
+  Leveraging Mistral AI's large language model for comprehensive smart contract security analysis, customized specifically for Linea Network contracts.
 
-- **Complete Electroneum Network Integration**  
-  Fully optimized for Electroneum Network's ecosystem:
-  - Seamless deployment to both Electroneum Network Mainnet & Testnet
+- **Complete Linea Network Integration**  
+  Fully optimized for Linea Network's ecosystem:
+  - Seamless deployment to Linea Sepolia Testnet
   - Network-specific security validation
-  - Specialized gas optimization for Electroneum environment
-  - Instant verification on Electroneum Network Explorer
+  - Specialized gas optimization for Linea environment
+  - Instant verification on Linea Network Explorer
   
-  ![Electroneum Network Support](https://github.com/user-attachments/assets/e14ab2ae-90b1-43aa-ab08-c931eb42045d)
+  ![Linea Network Support](https://github.com/user-attachments/assets/e14ab2ae-90b1-43aa-ab08-c931eb42045d)
 
 - **Self-Contained Smart Contract Templates**
   - Dependency-free ERC20 implementation
   - Native ERC721 implementation without external libraries
   - AI-assisted contract generation with custom specifications
   - Robust security features built into every template
-  - Electroneum Network gas optimizations
+  - Linea Network gas optimizations
   - ![Screenshot 2025-03-06 202229](https://github.com/user-attachments/assets/9208b0bb-8b01-46ce-9227-6042d38ddde6)
 
 - **Secure Contract Building**
@@ -31,10 +31,10 @@
   - Built-in security best practices and patterns
   - Comprehensive event emissions for full transparency
   - Robust access control and integrity checks
-  - Electroneum-specific optimizations for improved performance
+  - Linea-specific optimizations for improved performance
 
 - **On-Chain Verification System**  
-  - All audit reports permanently stored on Electroneum Network
+  - All audit reports permanently stored on Linea Network
   - Immutable audit history for complete traceability
   - Direct explorer integration for transparency
   - Verifiable security scores
@@ -52,14 +52,14 @@
 ### Prerequisites
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
-- Access to Electroneum Network (Mainnet & Testnet)
-- ETN tokens for contract deployment
+- Access to Linea Network (Sepolia Testnet)
+- ETH tokens for contract deployment
 
 ## 🔧 Technology Stack
 
 - **Frontend**: Next.js 14, Tailwind CSS, Shadcn UI
 - **AI Engine**: Mistral AI Large Language Model
-- **Blockchain Interface**: ethers.js
+- **Blockchain Interface**: ethers.js, wagmi
 - **User Experience**: Framer Motion, Phosphor Icons
 - **Validation**: Zod Schema Validation
 
@@ -67,7 +67,7 @@
 
 | Rating | Description |
 |--------|-------------|
-| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Electroneum Network |
+| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Linea Network |
 | ⭐⭐⭐⭐ | Very Good: No critical issues, minor optimizations needed |
 | ⭐⭐⭐ | Good: No critical but has high severity issues |
 | ⭐⭐ | Poor: Has critical vulnerability or multiple high severity issues |
@@ -75,7 +75,7 @@
 | 0 | Critical: Fundamental security flaws, unsafe for deployment |
 
 ## 🌐 Live Demo
-Visit [AuditFi](https://auditfi-electroneum.netlify.app/) to try it out on Electroneum Network!
+Visit [AuditFi](https://auditfi-linea.netlify.app/) to try it out on Linea Network!
 
 ## 🔍 Key Components
 
@@ -83,16 +83,16 @@ Visit [AuditFi](https://auditfi-electroneum.netlify.app/) to try it out on Elect
   - Real-time vulnerability detection
   - Custom contract validation against attack vectors
   - Advanced gas optimization recommendations
-  - Enforcement of Electroneum Network best practices
+  - Enforcement of Linea Network best practices
 
 - **Smart Contract Builder**
   - Self-contained templates without external dependencies
   - Custom implementations with security by design
-  - Network-specific optimizations for Electroneum
+  - Network-specific optimizations for Linea
   - Configurable parameters with validation
 
 - **Deployment & Verification Pipeline**
-  - One-click deployment to Electroneum Network
+  - One-click deployment to Linea Network
   - Automatic security verification
   - Real-time transaction monitoring
   - Seamless explorer integration
@@ -107,19 +107,19 @@ Visit [AuditFi](https://auditfi-electroneum.netlify.app/) to try it out on Elect
 
 ## 🔗 Network Support
 
-Exclusively supporting both Electroneum Network Mainnet & Testnet for:
+Exclusively supporting Linea Sepolia Testnet for:
 - Secure contract deployment
 - Comprehensive security analysis
 - On-chain transaction verification
 - Immutable audit storage
 - Network-specific gas optimization
-- Electroneum-focused security patterns
+- Linea-focused security patterns
 
 ![image](https://github.com/user-attachments/assets/cb47e089-9035-483f-a6e8-ac3cdd125b24)
 
 ## 📬 Contact & Support
 
-- Join the [Electroneum Network Discord](https://discord.gg/electroneum-999612117521010768)
+- Join the [Linea Network Discord](https://discord.gg/linea)
 - Follow AuditFi updates on [Twitter](https://x.com/AuditFi_ai)
 
 ## 📄 License
