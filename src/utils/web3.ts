@@ -1,26 +1,7 @@
 import { ethers } from 'ethers';
-
-// Define event types for better type safety
-type EthereumEvent = 
-  | { type: 'accountsChanged'; value: string[] }
-  | { type: 'chainChanged'; value: string }
-  | { type: 'connect'; value: { chainId: string } }
-  | { type: 'disconnect'; value: { code: number; message: string } };
-
-// Define event listener type
-type EthereumEventListener<T extends EthereumEvent['type']> = (
-  ...args: Extract<EthereumEvent, { type: T }>['value'] extends never
-    ? []
-    : [Extract<EthereumEvent, { type: T }>['value']]
-) => void;
+import { useAccount, useWalletClient, usePublicClient } from 'wagmi';
 
 // Define interfaces for better type safety
-interface EthereumProvider extends ethers.Eip1193Provider {
-  request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
-  on<T extends EthereumEvent['type']>(event: T, listener: EthereumEventListener<T>): void;
-  removeListener<T extends EthereumEvent['type']>(event: T, listener: EthereumEventListener<T>): void;
-}
-
 interface NativeCurrency {
   name: string;
   symbol: string;
@@ -36,25 +17,30 @@ interface ChainConfig {
   iconPath: string;
 }
 
-// Comment out Window interface extension to avoid type conflicts
-/* declare global {
-  interface Window {
-    ethereum?: EthereumProvider;
-  }
-} */
-
 export const CHAIN_CONFIG: Record<string, ChainConfig> = {
-  lineaSepolia: {
-    chainId: '0xe705', // 59141 in hex
-    chainName: 'Linea Sepolia',
+  seiTestnet: {
+    chainId: '0x530', // 1328 in hex
+    chainName: 'Sei Testnet',
     nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
+      name: 'Sei',
+      symbol: 'SEI',
       decimals: 18
     },
-    rpcUrls: ['https://rpc.sepolia.linea.build'],
-    blockExplorerUrls: ['https://sepolia.lineascan.build'],
-    iconPath: '/chains/linea.png'
+    rpcUrls: ['https://evm-rpc-testnet.sei-apis.com'],
+    blockExplorerUrls: ['https://testnet.seistream.app'],
+    iconPath: '/chains/sei.png'
+  },
+  seiMainnet: {
+    chainId: '0x531', // 1329 in hex
+    chainName: 'Sei Mainnet',
+    nativeCurrency: {
+      name: 'Sei',
+      symbol: 'SEI',
+      decimals: 18
+    },
+    rpcUrls: ['https://evm-rpc.sei-apis.com'],
+    blockExplorerUrls: ['https://seistream.app'],
+    iconPath: '/chains/sei.png'
   }
 } as const;
 
@@ -69,11 +55,46 @@ interface EthereumError extends Error {
   code: number;
 }
 
-export const connectWallet = async (): Promise<WalletConnection> => {
-  if (!window.ethereum) {
-    throw new Error('Please install MetaMask');
-  }
+// This is now a hook-based implementation for use within React components
+// The actual connection is managed by RainbowKit
+export const useWalletConnection = (): { connect: () => Promise<WalletConnection | null> } => {
+  const { address, isConnected } = useAccount();
+  
+  const connect = async (): Promise<WalletConnection | null> => {
+    try {
+      if (!isConnected || !address) {
+        return null;
+      }
+      
+      // If window.ethereum is available, use it to create a provider
+      if (typeof window !== 'undefined' && window.ethereum) {
+        const provider = new ethers.BrowserProvider(window.ethereum as any);
+        const signer = await provider.getSigner();
+        
+        return {
+          provider,
+          signer,
+          address
+        };
+      } else {
+        console.warn('No Ethereum provider available');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      return null;
+    }
+  };
+  
+  return { connect };
+};
 
+// Legacy function for backward compatibility
+export const connectWallet = async (): Promise<WalletConnection> => {
+  if (typeof window === 'undefined' || !window.ethereum) {
+    throw new Error('No Ethereum provider available');
+  }
+  
   try {
     const provider = new ethers.BrowserProvider(window.ethereum as any);
     await provider.send('eth_requestAccounts', []);
@@ -87,42 +108,10 @@ export const connectWallet = async (): Promise<WalletConnection> => {
 };
 
 export const switchNetwork = async (chainKey: ChainKey): Promise<void> => {
-  if (!window.ethereum) {
-    throw new Error('Please install MetaMask');
-  }
-
-  const chain = CHAIN_CONFIG[chainKey];
-  const ethereum = window.ethereum as EthereumProvider;
-  
-  try {
-    await ethereum.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: chain.chainId }],
-    });
-  } catch (error) {
-    const switchError = error as EthereumError;
-    // This error code means the chain has not been added to MetaMask
-    if (switchError.code === 4902) {
-      try {
-        await ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: chain.chainId,
-            chainName: chain.chainName,
-            nativeCurrency: chain.nativeCurrency,
-            rpcUrls: chain.rpcUrls,
-            blockExplorerUrls: chain.blockExplorerUrls
-          }],
-        });
-      } catch (addError) {
-        console.error('Error adding chain:', addError);
-        throw addError;
-      }
-    } else {
-      console.error('Error switching chain:', switchError);
-      throw switchError;
-    }
-  }
+  // With RainbowKit, network switching is handled automatically by the UI
+  // This function is kept for compatibility with existing code
+  console.log('Network switching is now handled by RainbowKit UI');
+  return Promise.resolve();
 };
 
 export const isSupportedNetwork = (chainId: string): boolean => {

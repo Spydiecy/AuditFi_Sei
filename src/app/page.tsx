@@ -23,19 +23,19 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Simplified chain config to only include Linea Network
+// Simplified chain config to only include Sei testnet
 const CHAIN_CONFIG = {
-  lineaSepolia: {
-    chainId: '0xe705', // 59141 in hex
-    chainName: 'Linea Sepolia',
+  seiTestnet: {
+    chainId: '0x530', // 1328 in hex
+    chainName: 'Sei testnet',
     nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
+      name: 'Sei',
+      symbol: 'SEI',
       decimals: 18
     },
-    rpcUrls: ['https://rpc.sepolia.linea.build'],
-    blockExplorerUrls: ['https://sepolia.lineascan.build'],
-    iconPath: '/chains/linea.png'
+    rpcUrls: ['https://evm-rpc-testnet.sei-apis.com'],
+    blockExplorerUrls: ['https://seitrace.com'],
+    iconPath: '/chains/sei.png'
   }
 };
 
@@ -57,7 +57,7 @@ const features = [
   {
     icon: Lightning,
     title: 'Multi-Chain Support',
-    description: 'Audit smart contracts on Linea network'
+    description: 'Audit smart contracts on Sei testnet'
   },
   {
     icon: Code,
@@ -83,7 +83,7 @@ const recentAudits: Audit[] = [
     summary: 'No critical vulnerabilities found. Code follows best practices.',
     auditor: '0xABc...123',
     timestamp: 1703116800,
-    chain: 'lineaSepolia'
+    chain: 'seiTestnet'
   },
   {
     contractHash: '0x456...def',
@@ -91,7 +91,7 @@ const recentAudits: Audit[] = [
     summary: 'Minor optimizations suggested. Overall secure implementation.',
     auditor: '0xDEf...456',
     timestamp: 1703030400,
-    chain: 'lineaSepolia'
+    chain: 'seiTestnet'
   },
   {
     contractHash: '0x789...ghi',
@@ -99,7 +99,7 @@ const recentAudits: Audit[] = [
     summary: 'Excellent implementation with robust security measures.',
     auditor: '0xGHi...789',
     timestamp: 1702944000,
-    chain: 'lineaSepolia'
+    chain: 'seiTestnet'
   }
 ];
 
@@ -177,7 +177,7 @@ export default function Home() {
                 <span className="text-white">SECURITY</span>
               </h1>
               <p className="text-gray-400 text-lg mb-8 max-w-xl">
-                Secure your smart contracts with AI-powered analysis, documentation, and on-chain verification. Get instant security audits powered by Finetuned AI, now optimized for Linea Network.
+                Secure your smart contracts with AI-powered analysis, documentation, and on-chain verification. Get instant security audits powered by Finetuned AI, now optimized for Sei Network.
               </p>
               <div className="flex gap-4">
                 <Link href="/audit">
@@ -317,10 +317,10 @@ export default function Home() {
               <span className="text-white text-sm font-semibold">Network Support</span>
             </div>
             <h2 className="text-4xl font-bold font-mono mb-4">
-              <span className="text-white">Linea</span> Network Integration
+              <span className="text-white">Sei</span> Network Integration
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Optimized for the Linea Network ecosystem with native support for ETH tokens
+              Optimized for the Sei Network ecosystem with native support for SEI tokens
             </p>
           </motion.div>
 
@@ -332,22 +332,22 @@ export default function Home() {
               <div className="relative">
                 <div className="absolute inset-0 bg-white/20 rounded-full filter blur-md"></div>
                 <Image
-                  src="/chains/linea.png"
-                  alt="Linea Network"
+                  src="/chains/sei.png"
+                  alt="Sei Network"
                   width={60}
                   height={60}
                   className="rounded-full relative z-10 ring-2 ring-white/50 p-1"
                 />
               </div>
               <div>
-                <h3 className="font-semibold text-xl mb-1">Linea Sepolia Testnet</h3>
-                <p className="text-gray-400">Native Token: <span className="text-white font-semibold">ETH</span></p>
+                <h3 className="font-semibold text-xl mb-1">Sei Testnet</h3>
+                <p className="text-gray-400">Native Token: <span className="text-white font-semibold">SEI</span></p>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <a href="https://sepolia.lineascan.build" target="_blank" rel="noopener noreferrer" className="text-sm text-white hover:text-gray-300 flex items-center space-x-1">
+                  <a href="https://sepolia.seitrace.com" target="_blank" rel="noopener noreferrer" className="text-sm text-white hover:text-gray-300 flex items-center space-x-1">
                     <span>Block Explorer</span>
                     <ArrowRight size={14} weight="bold" />
                   </a>
-                  <a href="https://docs.linea.build" target="_blank" rel="noopener noreferrer" className="text-sm text-white hover:text-gray-300 flex items-center space-x-1">
+                  <a href="https://docs.sei.io" target="_blank" rel="noopener noreferrer" className="text-sm text-white hover:text-gray-300 flex items-center space-x-1">
                     <span>Developer Docs</span>
                     <ArrowRight size={14} weight="bold" />
                   </a>
@@ -553,17 +553,17 @@ export default function Home() {
               <h3 className="font-semibold mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="https://docs.linea.build" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="https://docs.sei.io" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                     Documentation
                   </a>
                 </li>
                 <li>
-                  <a href="https://linea.build" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                     Community
                   </a>
                 </li>
                 <li>
-                  <a href="https://linea.build" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <a href="" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
                     Support
                   </a>
                 </li>

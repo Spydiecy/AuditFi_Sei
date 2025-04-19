@@ -1,20 +1,20 @@
 # AuditFi 🛡️
 
-**Next-generation smart contract security powered by Finetuned AI, delivering instant, on-chain audit reports for Linea Network.**
+**Next-generation smart contract security powered by Finetuned AI, delivering instant, on-chain audit reports for Sei Network.**
 
 ![image](https://github.com/user-attachments/assets/0ea2adad-3a31-4c22-a93c-f2cfe42f71d8)
 
 ## 🌟 Features
 
 - **Advanced AI-Powered Analysis**  
-  Leveraging finetuned large language model for comprehensive smart contract security analysis, customized specifically for Linea Network contracts.
+  Leveraging finetuned large language model for comprehensive smart contract security analysis, customized specifically for Sei Network contracts.
 
-- **Complete Linea Network Integration**  
-  Fully optimized for Linea Network's ecosystem:
-  - Seamless deployment to Linea Sepolia Testnet
+- **Complete Sei Network Integration**  
+  Fully optimized for Sei Network's ecosystem:
+  - Seamless deployment to Sei Testnet
   - Network-specific security validation
-  - Specialized gas optimization for Linea environment
-  - Instant verification on Linea Network Explorer
+  - Specialized gas optimization for Sei environment
+  - Instant verification on Sei Explorer
   
   ![image](https://github.com/user-attachments/assets/127d5dab-3395-4fa9-9ca5-c6dddcd0b3d8)
 
@@ -23,7 +23,7 @@
   - Native ERC721 implementation without external libraries
   - AI-assisted contract generation with custom specifications
   - Robust security features built into every template
-  - Linea Network gas optimizations
+  - Sei Network gas optimizations
   - ![image](https://github.com/user-attachments/assets/2188c03d-e7fc-4315-8dea-3b630fe65bd0)
 
 - **Secure Contract Building**
@@ -31,10 +31,10 @@
   - Built-in security best practices and patterns
   - Comprehensive event emissions for full transparency
   - Robust access control and integrity checks
-  - Linea-specific optimizations for improved performance
+  - Sei-specific optimizations for improved performance
 
 - **On-Chain Verification System**  
-  - All audit reports permanently stored on Linea Network
+  - All audit reports permanently stored on Sei Network
   - Immutable audit history for complete traceability
   - Direct explorer integration for transparency
   - Verifiable security scores
@@ -52,7 +52,7 @@
 ### Prerequisites
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
-- Access to Linea Network (Sepolia Testnet)
+- Access to Sei Network (Testnet)
 - ETH tokens for contract deployment
 
 ## 🔧 Technology Stack
@@ -67,7 +67,7 @@
 
 | Rating | Description |
 |--------|-------------|
-| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Linea Network |
+| ⭐⭐⭐⭐⭐ | Perfect: Zero vulnerabilities, fully optimized for Sei Network |
 | ⭐⭐⭐⭐ | Very Good: No critical issues, minor optimizations needed |
 | ⭐⭐⭐ | Good: No critical but has high severity issues |
 | ⭐⭐ | Poor: Has critical vulnerability or multiple high severity issues |
@@ -75,7 +75,7 @@
 | 0 | Critical: Fundamental security flaws, unsafe for deployment |
 
 ## 🌐 Live Demo
-Visit [AuditFi](https://auditfi-linea.netlify.app/) to try it out on Linea Network!
+Visit [AuditFi](https://auditfi-sei.netlify.app/) to try it out on Sei Network!
 
 ## 🔍 Key Components
 
@@ -83,16 +83,16 @@ Visit [AuditFi](https://auditfi-linea.netlify.app/) to try it out on Linea Netwo
   - Real-time vulnerability detection
   - Custom contract validation against attack vectors
   - Advanced gas optimization recommendations
-  - Enforcement of Linea Network best practices
+  - Enforcement of Sei Network best practices
 
 - **Smart Contract Builder**
   - Self-contained templates without external dependencies
   - Custom implementations with security by design
-  - Network-specific optimizations for Linea
+  - Network-specific optimizations for Sei
   - Configurable parameters with validation
 
 - **Deployment & Verification Pipeline**
-  - One-click deployment to Linea Network
+  - One-click deployment to Sei Testnet
   - Automatic security verification
   - Real-time transaction monitoring
   - Seamless explorer integration
@@ -107,13 +107,13 @@ Visit [AuditFi](https://auditfi-linea.netlify.app/) to try it out on Linea Netwo
 
 ## 🔗 Network Support
 
-Exclusively supporting Linea Sepolia Testnet for:
+Exclusively supporting Sei Testnet for:
 - Secure contract deployment
 - Comprehensive security analysis
 - On-chain transaction verification
 - Immutable audit storage
 - Network-specific gas optimization
-- Linea-focused security patterns
+- Sei-focused security patterns
 
 ![image](https://github.com/user-attachments/assets/8d7a929e-4559-4ed9-a2bc-9f2abedea0c4)
 

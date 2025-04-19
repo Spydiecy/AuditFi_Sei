@@ -183,7 +183,7 @@ export default function ProfilePage() {
                 <User size={16} className="text-white" weight="bold" />
                 <span className="font-mono">{address}</span>
                 <a
-                  href={`https://etherscan.io/address/${address}`}
+                  href={`https://seistream.app/account/${address}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white hover:text-gray-300 transition-colors"

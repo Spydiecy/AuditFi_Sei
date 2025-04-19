@@ -8,11 +8,9 @@ import { motion } from 'framer-motion';
 import { CHAIN_CONFIG, ChainKey } from '@/utils/web3';
 import { SignOut, List, X, CaretDown, CaretUp } from 'phosphor-react';
 import Logo from '/public/logo.svg';
-import { WagmiProvider } from 'wagmi';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { wagmiConfig, queryClient } from '@/utils/wagmi-config';
-import { ConnectButton } from '@/components/ConnectButton';
+import WalletConnectButton from '@/components/WalletConnectButton';
 import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { RainbowKitProviderWrapper } from '@/providers/rainbow-kit-provider';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -28,13 +26,13 @@ function MainLayout({ children }: RootLayoutProps) {
   
   // Find current chain key based on chain id
   const getCurrentChainKey = (): ChainKey => {
-    if (!chainId) return 'lineaSepolia';
+    if (!chainId) return 'seiTestnet';
     
     const networkEntry = Object.entries(CHAIN_CONFIG).find(
       ([, config]) => config.chainId.toLowerCase() === '0x' + chainId.toString(16).toLowerCase()
     );
     
-    return networkEntry ? networkEntry[0] as ChainKey : 'lineaSepolia';
+    return networkEntry ? networkEntry[0] as ChainKey : 'seiTestnet';
   };
   
   const currentChain = getCurrentChainKey();
@@ -171,7 +169,7 @@ function MainLayout({ children }: RootLayoutProps) {
               ) : null}
               
               <div className="ml-4">
-                <ConnectButton />
+                <WalletConnectButton />
               </div>
             </div>
 
@@ -239,7 +237,7 @@ function MainLayout({ children }: RootLayoutProps) {
               {/* Mobile Wallet Connection */}
               <div className="pt-4 pb-3">
                 <div className="px-3">
-                  <ConnectButton />
+                  <WalletConnectButton />
                 </div>
               </div>
             </div>
@@ -259,11 +257,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
-        <WagmiProvider config={wagmiConfig}>
-          <QueryClientProvider client={queryClient}>
-            <MainLayout>{children}</MainLayout>
-          </QueryClientProvider>
-        </WagmiProvider>
+        <RainbowKitProviderWrapper>
+          <MainLayout>{children}</MainLayout>
+        </RainbowKitProviderWrapper>
         
         {/* Debug script for MetaMask connection */}
         <script dangerouslySetInnerHTML={{

@@ -142,7 +142,7 @@ export default function ScannerPage() {
         "Add proper input validation for all parameters",
         "Use SafeMath for arithmetic operations",
         "Add events for all state-changing operations",
-        "Follow Linea Network gas optimization best practices"
+        "Follow Sei Network gas optimization best practices"
       ]
     };
     

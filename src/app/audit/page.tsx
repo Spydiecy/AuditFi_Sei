@@ -19,7 +19,7 @@ import {
   Lightning,
   Shield
 } from 'phosphor-react';
-import { connectWallet } from '@/utils/web3';
+import { useWalletConnection } from '@/utils/web3';
 import { CONTRACT_ADDRESSES, AUDIT_REGISTRY_ABI } from '@/utils/contracts';
 import { CHAIN_CONFIG } from '@/utils/web3';
 
@@ -157,10 +157,19 @@ export default function AuditPage() {
     return (hasPragma || hasContractLike) && hasSolidityKeywords;
   };
 
+  // Use our new wallet connection hook
+  const { connect } = useWalletConnection();
+  
   // Detect current network
   const detectCurrentNetwork = async () => {
     try {
-      const { provider } = await connectWallet();
+      const connection = await connect();
+      if (!connection) {
+        console.log('No wallet connection available');
+        return null;
+      }
+      
+      const { provider } = connection;
       const network = await provider.getNetwork();
       const chainId = '0x' + network.chainId.toString(16);
       
@@ -186,7 +195,12 @@ export default function AuditPage() {
     setTxState({ isProcessing: true, hash: null, error: null });
 
     try {
-      const { provider, signer } = await connectWallet();
+      const connection = await connect();
+      if (!connection) {
+        throw new Error('Please connect your wallet first');
+      }
+      
+      const { provider, signer } = connection;
       
       // Calculate contract hash
       const contractHash = ethers.keccak256(
@@ -197,15 +211,15 @@ export default function AuditPage() {
       const network = await provider.getNetwork();
       const chainId = '0x' + network.chainId.toString(16);
       
-      // Check if we're on Linea Network (either mainnet or testnet)
+      // Check if we're on Sei Network (either mainnet or testnet)
       const detectedChain = await detectCurrentNetwork();
       
       if (!detectedChain) {
-        throw new Error('Please switch to Linea Network (Testnet) to register audits');
+        throw new Error('Please switch to Sei Network to register audits');
       }
       
-      if (detectedChain !== 'lineaSepolia') {
-        throw new Error('Please switch to Linea Network (Testnet) to register audits');
+      if (detectedChain !== 'seiTestnet' && detectedChain !== 'seiMainnet') {
+        throw new Error('Please switch to Sei Network to register audits');
       }
       
       // Get the proper contract address based on the current network
@@ -357,7 +371,7 @@ export default function AuditPage() {
             <span className="text-white text-sm font-semibold">AI Security Analysis</span>
           </div>
           <h1 className="text-3xl font-mono font-bold text-white mb-4">Smart Contract Audit</h1>
-          <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts on Linea Network</p>
+          <p className="text-gray-400">Get instant AI-powered security analysis for your smart contracts on Sei Network</p>
           <AnimatePresence>
             {error && (
               <motion.div
@@ -462,7 +476,7 @@ export default function AuditPage() {
                   </div>
                   {txState.hash && currentChain && (
                     <a 
-                      href={`${CHAIN_CONFIG[currentChain].blockExplorerUrls[0]}/tx/${txState.hash}`}
+                      href={`${CHAIN_CONFIG[currentChain].blockExplorerUrls[0]}/transactions/${txState.hash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-white hover:text-gray-300 text-sm flex items-center gap-1 transition-colors duration-200"
@@ -590,7 +604,7 @@ export default function AuditPage() {
                       
                       {!currentChain && (
                         <div className="mt-4 text-yellow-400 text-sm">
-                          Please connect to Linea Network (Testnet)
+                          Please connect to Sei Network
                         </div>
                       )}
                     </div>

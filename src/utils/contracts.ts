@@ -1,6 +1,7 @@
 // constants/contracts.ts
 export const CONTRACT_ADDRESSES = {
-  lineaSepolia: '0xcfE9F724236Afd16b54eE3CDF6B895919Cb34084',
+  seiTestnet: '0xF887B4D3b17C12C86cc917cF72fb8881f866a847',
+  seiMainnet: '0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6',
   } as const;
 
   export const AUDIT_REGISTRY_ABI = [

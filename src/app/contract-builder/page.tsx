@@ -247,13 +247,13 @@ export default function ContractBuilder() {
       const { provider, signer } = await connectWallet();
       const detectedChain = await detectCurrentNetwork();
       
-      // Validate we're on an Linea network
+      // Validate we're on an SEI network
       if (!detectedChain) {
-        throw new Error('Please switch to Linea Network (Testnet) to deploy contracts');
+        throw new Error('Please switch to Sei Network to deploy contracts');
       }
 
-      if (detectedChain !== 'lineaSepolia') {
-        throw new Error('Please switch to Linea Network (Testnet) to deploy contracts');
+      if (detectedChain !== 'seiTestnet' && detectedChain !== 'seiMainnet') {
+        throw new Error('Please switch to Sei Network to deploy contracts');
       }
 
       // Compile contract
@@ -313,10 +313,19 @@ export default function ContractBuilder() {
   };
 
   // Helper functions
-  const getExplorerUrl = () => {
+  const getExplorerUrl = (type = 'contracts') => {
     if (!currentChain || !deployedAddress) return null;
-    const baseUrl = CHAIN_CONFIG[currentChain].blockExplorerUrls[0];
-    return `${baseUrl}/address/${deployedAddress}`;
+    
+    // Determine which network we're on
+    const isTestnet = currentChain === 'seiTestnet';
+    
+    // Set the appropriate base URL for the explorer
+    const baseUrl = isTestnet 
+      ? 'https://testnet.seistream.app' 
+      : 'https://seistream.app';
+    
+    // Return the complete URL with correct path segment (contracts or tokens)
+    return `${baseUrl}/${type}/${deployedAddress}`;
   };
 
   const handleConnectWallet = async () => {
@@ -347,7 +356,7 @@ export default function ContractBuilder() {
             <span className="text-white text-sm font-semibold">Smart Contract Development</span>
           </div>
           <h1 className="text-3xl font-mono font-bold mb-4 text-white">Smart Contract Builder</h1>
-          <p className="text-gray-400">Generate and deploy secure smart contracts on Linea Network</p>
+          <p className="text-gray-400">Generate and deploy secure smart contracts on Sei Network</p>
           
           <AnimatePresence>
             {error && (
@@ -367,20 +376,37 @@ export default function ContractBuilder() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-4 bg-white-500/10 border border-white-500/20 text-white-400 px-4 py-3 rounded-lg"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3">
                 <div>
                   <p className="font-semibold mb-1">Contract deployed successfully!</p>
                   <p className="text-sm font-mono">{deployedAddress}</p>
                 </div>
-                <a
-                  href={getExplorerUrl() || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-white-400 hover:text-white-300 transition-colors duration-200"
-                >
-                  <Link size={20} weight="bold" />
-                  View on Explorer
-                </a>
+                <div className="flex items-center gap-3">
+                  <a
+                    href={getExplorerUrl('contracts') || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 rounded-lg text-white transition-colors duration-200"
+                  >
+                    <Code size={16} weight="bold" />
+                    View Contract
+                  </a>
+                  {selectedTemplate && 
+                   (selectedTemplate.name.toLowerCase().includes('token') || 
+                    selectedTemplate.name.toLowerCase().includes('erc20') || 
+                    selectedTemplate.name.toLowerCase().includes('erc721') || 
+                    selectedTemplate.name.toLowerCase().includes('nft')) && (
+                    <a
+                      href={getExplorerUrl('tokens') || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/20 hover:bg-emerald-500/30 rounded-lg text-white transition-colors duration-200"
+                    >
+                      <Link size={16} weight="bold" />
+                      View Token
+                    </a>
+                  )}
+                </div>
               </div>
             </motion.div>
           )}
@@ -558,15 +584,15 @@ export default function ContractBuilder() {
                       </div>
                     ) : (
                       <div className="text-sm text-yellow-400 bg-yellow-500/10 border border-yellow-500/20 rounded-lg px-3 py-2">
-                        Please connect to Linea Network (Testnet) to deploy
+                        Please connect to Sei Network to deploy
                       </div>
                     )}
 
                     <button
                       onClick={deployContract}
-                      disabled={isDeploying || !currentChain || (currentChain !== 'lineaSepolia')}
-                      className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-colors duration-200
-                        ${isDeploying || !currentChain || (currentChain !== 'lineaSepolia')
+                      disabled={isDeploying || !currentChain || (currentChain !== 'seiTestnet' && currentChain !== 'seiMainnet')}
+                      className={`w-full py-3 px-4 rounded-lg font-bold flex items-center justify-center gap-2 transition-all duration-200
+                        ${isDeploying || !currentChain || (currentChain !== 'seiTestnet' && currentChain !== 'seiMainnet')
                           ? 'bg-gray-800 text-gray-400 cursor-not-allowed'
                           : 'bg-dark-100 hover:bg-dark-200 text-white shadow-lg shadow-white/20'
                         }`}

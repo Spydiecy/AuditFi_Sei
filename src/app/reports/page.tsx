@@ -48,6 +48,33 @@ export default function ReportsPage() {
     minStars: 0
   });
 
+  const getSeiExplorerLink = (report: AuditReport): string => {
+    // If no transaction hash, return empty string or placeholder URL
+    if (!report.transactionHash) {
+      return '#'; // Return non-navigable link
+    }
+
+    // Handle specific explorer URL format for Sei Network
+    if (report.chain === 'seiMainnet') {
+      // Ensure transaction hash has correct format
+      const formattedHash = report.transactionHash.startsWith('0x') 
+        ? report.transactionHash 
+        : `0x${report.transactionHash}`;
+      
+      console.log(`Building Sei explorer URL for: ${formattedHash}`);
+      return `https://seistream.app/tx/${formattedHash}`;
+    } else if (report.chain === 'seiTestnet') {
+      const formattedHash = report.transactionHash.startsWith('0x') 
+        ? report.transactionHash 
+        : `0x${report.transactionHash}`;
+      
+      return `https://testnet.seistream.app/tx/${formattedHash}`;
+    }
+    
+    // Default explorer URL format for other chains
+    return `${CHAIN_CONFIG[report.chain].blockExplorerUrls[0]}/tx/${report.transactionHash}`;
+  };
+
   // Fetch audits from all supported chains
   const fetchAllChainAudits = async () => {
     setIsLoading(true);
@@ -83,23 +110,49 @@ export default function ReportsPage() {
                 timestamps
               } = await contract.getAllAudits(processed, BATCH_SIZE);
   
+              console.log(`Processing batch of ${contractHashes.length} audits`);
+              
               for (let i = 0; i < contractHashes.length; i++) {
-                const filter = contract.filters.AuditRegistered(contractHashes[i]);
-                const blockNumber = await provider.getBlockNumber();
-                const events = await contract.queryFilter(filter, 0, blockNumber);
-                const txHash = events[events.length - 1]?.transactionHash || '';
-  
-                allAudits.push({
-                  contractHash: contractHashes[i],
-                  transactionHash: txHash,
-                  stars: Number(stars[i]),
-                  summary: summaries[i],
-                  auditor: auditors[i],
-                  timestamp: Number(timestamps[i]),
-                  chain: chainKey as ChainKey
-                });
+                try {
+                  const filter = contract.filters.AuditRegistered(contractHashes[i]);
+                  const currentBlock = await provider.getBlockNumber();
+                  const MAX_BLOCK_RANGE = 10000; // About 1-2 days of blocks
+                  const startBlock = Math.max(0, currentBlock - MAX_BLOCK_RANGE);
+                  
+                  const events = await contract.queryFilter(filter, startBlock, currentBlock);
+                  const txHash = events[events.length - 1]?.transactionHash || '';
+                  
+                  allAudits.push({
+                    contractHash: contractHashes[i],
+                    transactionHash: txHash,
+                    stars: Number(stars[i]),
+                    summary: summaries[i],
+                    auditor: auditors[i],
+                    timestamp: Number(timestamps[i]),
+                    chain: chainKey as ChainKey
+                  });
+                  
+                  if (txHash) {
+                    console.log(`Found tx hash for ${contractHashes[i].slice(0, 8)}: ${txHash.slice(0, 10)}...`);
+                  } else {
+                    console.log(`No tx hash found for ${contractHashes[i].slice(0, 8)}`);
+                  }
+                } catch (eventError) {
+                  console.error(`Error fetching events for contract ${contractHashes[i].slice(0, 8)}:`, eventError);
+                  
+                  // Still add the audit even if we can't get the transaction hash
+                  allAudits.push({
+                    contractHash: contractHashes[i],
+                    transactionHash: '',
+                    stars: Number(stars[i]),
+                    summary: summaries[i],
+                    auditor: auditors[i],
+                    timestamp: Number(timestamps[i]),
+                    chain: chainKey as ChainKey
+                  });
+                }
               }
-  
+              
               processed += contractHashes.length;
               console.log(`Processed ${processed}/${totalContracts} on ${chainKey}`);
   
@@ -409,24 +462,6 @@ export default function ReportsPage() {
                 </div>
 
                 <div className="space-y-6">
-                    <div>
-                    <label className="block text-sm text-gray-400 mb-1">Transaction Hash</label>
-                    <div className="font-mono bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700/70 flex items-center justify-between">
-                      <span className="truncate">
-                      {selectedReport.transactionHash.slice(0, 28)}...{selectedReport.transactionHash.slice(-24)}
-                      </span>
-                        <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(selectedReport.transactionHash);
-                        }}
-                        className="ml-2 p-1.5 hover:bg-white/20 rounded-md transition-colors duration-200"
-                        title="Copy txn hash"
-                        >
-                        <Copy size={18} weight="bold" className="text-white" />
-                      </button>
-                    </div>
-                    </div>
-
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Chain</label>
                     <div className="flex items-center gap-2 bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700/70">
@@ -470,7 +505,7 @@ export default function ReportsPage() {
                     <div className="font-mono bg-gray-800/70 px-3 py-2 rounded-lg border border-gray-700/70 flex items-center justify-between">
                       <span>{selectedReport.auditor}</span>
                       <a
-                        href={`${CHAIN_CONFIG[selectedReport.chain].blockExplorerUrls[0]}/address/${selectedReport.auditor}`}
+                        href={`${CHAIN_CONFIG[selectedReport.chain].blockExplorerUrls[0]}/account/${selectedReport.auditor}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white hover:text-gray-300 flex items-center gap-1 transition-colors duration-200"
@@ -495,15 +530,17 @@ export default function ReportsPage() {
                       <Download size={20} weight="bold" />
                       Export Report
                     </button>
-                    <a
-                      href={`${CHAIN_CONFIG[selectedReport.chain].blockExplorerUrls[0]}/tx/${selectedReport.transactionHash}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2"
-                    >
-                      View on Explorer
-                      <ArrowSquareOut size={20} weight="bold" />
-                    </a>
+                    {selectedReport.transactionHash && selectedReport.transactionHash.length > 20 && !selectedReport.transactionHash.includes('-') && (
+                      <a
+                        href={getSeiExplorerLink(selectedReport)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-gray-800 rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2"
+                      >
+                        View on Explorer
+                        <ArrowSquareOut size={20} weight="bold" />
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
