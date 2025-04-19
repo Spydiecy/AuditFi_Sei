@@ -53,7 +53,7 @@
 - Node.js >= 16.x
 - MetaMask or compatible Web3 wallet
 - Access to Sei Network (Testnet)
-- ETH tokens for contract deployment
+- SEI tokens for contract deployment
 
 ## 🔧 Technology Stack
 
