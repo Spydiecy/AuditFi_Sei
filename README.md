@@ -2,7 +2,7 @@
 
 **Next-generation smart contract security powered by Finetuned AI, delivering instant, on-chain audit reports for Sei Network.**
 
-![image](https://github.com/user-attachments/assets/0ea2adad-3a31-4c22-a93c-f2cfe42f71d8)
+![Home](https://github.com/user-attachments/assets/58238981-18cb-44d3-85fd-13745c85fc4b)
 
 ## 🌟 Features
 
@@ -16,7 +16,6 @@
   - Specialized gas optimization for Sei environment
   - Instant verification on Sei Explorer
   
-  ![image](https://github.com/user-attachments/assets/127d5dab-3395-4fa9-9ca5-c6dddcd0b3d8)
 
 - **Self-Contained Smart Contract Templates**
   - Dependency-free ERC20 implementation
@@ -24,7 +23,7 @@
   - AI-assisted contract generation with custom specifications
   - Robust security features built into every template
   - Sei Network gas optimizations
-  - ![image](https://github.com/user-attachments/assets/2188c03d-e7fc-4315-8dea-3b630fe65bd0)
+  - ![Contract Templates](https://github.com/user-attachments/assets/221043e9-9ffc-4061-ab10-678f21bb26fd)
 
 - **Secure Contract Building**
   - Zero-dependency contract architecture
@@ -32,14 +31,17 @@
   - Comprehensive event emissions for full transparency
   - Robust access control and integrity checks
   - Sei-specific optimizations for improved performance
+  - ![Contract Builder page](https://github.com/user-attachments/assets/dfb441d3-b03e-4276-ab91-b610a223e3c1)
 
 - **On-Chain Verification System**  
   - All audit reports permanently stored on Sei Network
   - Immutable audit history for complete traceability
   - Direct explorer integration for transparency
   - Verifiable security scores
-  - ![image](https://github.com/user-attachments/assets/69735782-35f8-4a18-9706-22ada9a5f599)
-  - ![image](https://github.com/user-attachments/assets/f651f308-a028-48e4-b687-67579eb8186f)
+  - ![Audit Page](https://github.com/user-attachments/assets/7f8f3281-bb6c-4967-a35c-1d9d83b42d86)
+  - ![Reports Page](https://github.com/user-attachments/assets/c7be0cb1-8b42-4f6b-b0c5-90ab7e8326b0)
+  - ![Auditor's Profile Page](https://github.com/user-attachments/assets/3df03aae-f996-41bd-8a2c-c8ecaa6b5685)
+
 
 - **Interactive Development Experience**
   - Real-time code generation and validation
@@ -101,9 +103,9 @@ Visit [AuditFi](https://auditfi-sei.netlify.app/) to try it out on Sei Network!
   - Automatically generated smart contract documentation
   - AI-powered test case creation for multiple frameworks
 
-![image](https://github.com/user-attachments/assets/cd1549ce-4e06-4a51-b20f-c56bf0af32aa)
+![Testcase Page](https://github.com/user-attachments/assets/09a7c78d-7980-436c-8b34-b416b1186ff6)
 
-![image](https://github.com/user-attachments/assets/275f8c22-64eb-4776-a6ad-f537ca3b4e03)
+![Documentation Page](https://github.com/user-attachments/assets/75065e6a-79fe-448f-a94b-f4a39734eaf1)
 
 ## 🔗 Network Support
 
@@ -115,8 +117,8 @@ Exclusively supporting Sei Testnet for:
 - Network-specific gas optimization
 - Sei-focused security patterns
 
-![image](https://github.com/user-attachments/assets/8d7a929e-4559-4ed9-a2bc-9f2abedea0c4)
-
+![Network Support Section](https://github.com/user-attachments/assets/9f2955c2-4a91-4c67-ac38-7ead1daaaf67)
+ 
 ## 📬 Contact & Support
 
 - Follow AuditFi updates on [Twitter](https://x.com/AuditFi_ai)
